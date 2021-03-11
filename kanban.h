@@ -21,7 +21,7 @@ typedef struct task {
     Date creationDate;
     Date targetDate;
     Date finalDate;
-    Slave person;
+    Person person;
 }Task ;
 
 typedef struct node{
