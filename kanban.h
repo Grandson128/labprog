@@ -26,7 +26,7 @@ typedef struct task {
 
 typedef struct node{
     int info;
-    Task *Task;
+    Task *task;
     Tasklist next;
 }Node;
 
@@ -59,7 +59,7 @@ void insertItemList (Tasklist list, Task task);
 void deletItemList (Tasklist list, int item);
 
 Tasklist searchList (Tasklist list, Task task); //Using task to search
-Tasklist searchList (Tasklist list, int task); //Using task Identifier to search
+//Tasklist searchList (Tasklist list, int task); //Using task Identifier to search
 
 void printlist (Tasklist lista);
 
