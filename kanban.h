@@ -26,7 +26,7 @@ typedef struct task {
 
 typedef struct node{
     int info;
-    Task *Task;
+    Task *task;
     Tasklist next;
 }Node;
 
