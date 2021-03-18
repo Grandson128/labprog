@@ -101,7 +101,7 @@ void insertTask (Tasklist list, Task *task){
 }
 
 
-void deletTask (Tasklist list, int item){
+void deleteTask (Tasklist list, int item){
     //TODO
 }
 
