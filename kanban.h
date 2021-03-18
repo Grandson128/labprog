@@ -16,7 +16,6 @@ typedef struct node* Tasklist;
 typedef struct task {
     int id;
     int priority; 
-    int state; // 1- ToDo; 2- Doing; 3- Done
     char *description; 
     Date creationDate;
     Date targetDate;
@@ -55,13 +54,19 @@ Tasklist createTaskList();
 Tasklist removeTaskList (Tasklist list);
 int emptyList (Tasklist list);
 int fullList (Tasklist list);
-void insertItemList (Tasklist list, Task task);
-void deletItemList (Tasklist list, int item);
 
-Tasklist searchList (Tasklist list, Task task); //Using task to search
-//Tasklist searchList (Tasklist list, int task); //Using task Identifier to search
 
-void printlist (Tasklist lista);
+void insertTask (Tasklist list, Task *task);
+void insertTodoTask (Tasklist list, Task *task);
+void insertDoingTask (Tasklist list, Task *task);
+void insertDoneTask (Tasklist list, Task *task);
+
+
+
+
+void deleteTask (Tasklist list, int item);
+Tasklist searchTask (Tasklist list, int task); //Using task Identifier to search
+void printlist (Tasklist list);
 
 
 
