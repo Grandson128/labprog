@@ -39,7 +39,7 @@ Tasklist removeTaskList (Tasklist list){
     return NULL;
 }
 
-int lista_vazia(Tasklist list){
+int lista_vazia(Tasklist list){ //do you wants to alter this to english yes?
   return (list->next == NULL ? 1 : 0);
 }
 
@@ -105,3 +105,36 @@ void deletTask (Tasklist list, int item){
     //TODO
 }
 
+
+
+/************************ DATES ************************/
+
+/**
+ *
+ *  Creates and sets new date
+ * 
+ **/
+Date *set_date(){ 
+
+        Date *new = (Date *)malloc(sizeof(Date));
+
+        printf("Insert date in the following format:\n DD/MM/AAAA \n");
+        scanf("%d/%d/%d",&new->day,&new->month,&new->year);
+        getchar();
+
+        return new;
+
+}
+
+Date change_date(Date date) { //é preciso
+
+}
+
+/**
+ *
+ *  Creates and sets new date
+ * 
+ **/
+Date validate_date(Date date){
+
+}
