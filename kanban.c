@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #include "kanban.h"
 
-
-
 /**
  *
  *  Creates an empty tasklist
  *
  **/
-
 Tasklist createTaskList(){
     Tasklist aux;
+
     aux = (Tasklist)malloc(sizeof(Node));
+
     if (aux != NULL) {
         aux->info = 0;
         aux->task = NULL;
         aux->next = NULL;
-    }else{
+    }
+    else {
         printf("No memory available to allocate list");
     }
     return aux;
@@ -25,37 +25,40 @@ Tasklist createTaskList(){
 
 /**
  *
- *  Removes completely from memory a given tasklsit
+ *  Removes completely from memory a given tasklist
  *
  **/
-Tasklist removeTaskList (Tasklist list){
+Tasklist removeTaskList(Tasklist list){
     Tasklist temp_ptr;
-    while (lista_vazia(list) == 0){
+
+    while (emptyList(list) == 0){
         temp_ptr = list;
         list = list->next;
         free(temp_ptr);
     }
+
     free(list);
+
     return NULL;
 }
 
-int lista_vazia(Tasklist list){ //do you wants to alter this to english yes?
-  return (list->next == NULL ? 1 : 0);
+int emptyList(Tasklist list){
+    return (list->next == NULL ? 1 : 0);
 }
 
-int fullList (Tasklist list){
-    //TODO
-
+int fullList(Tasklist list){
+    //ToDo
 }
 
 /**
  *
- * Returns a list where the first task element has the same identification as the one given
- * @list - task list with our task
- * @task - task identifier
+ *  Returns a list where the first task element has the same identification as the one given
+ *  @list - task list with our task
+ *  @task - task identifier
  *
  **/
-Tasklist searchTask (Tasklist list, int task){
+Tasklist searchTask(Tasklist list, int task){
+
     int targetValue = task;
     Tasklist previous = list;
     Tasklist current = list->next;
@@ -75,9 +78,7 @@ Tasklist searchTask (Tasklist list, int task){
     return current;
 }
 
-void insertTask (Tasklist list, Task *task){
-
-
+void insertTask(Tasklist list, Task *task){
     Tasklist previous = list;
     Tasklist current = list->next;
 
@@ -91,21 +92,15 @@ void insertTask (Tasklist list, Task *task){
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
-    }else if(task != NULL && current != NULL){
-
-        //TODO Loop camparing creation date
-
-
     }
-
+    else if(task != NULL && current != NULL){
+        //ToDo Loop comparing creation date
+    }
 }
 
-
-void deleteTask (Tasklist list, int item){
-    //TODO
+void deleteTask(Tasklist list, int item){
+    //ToDo
 }
-
-
 
 /************************ DATES ************************/
 
@@ -114,20 +109,18 @@ void deleteTask (Tasklist list, int item){
  *  Creates and sets new date
  *
  **/
-Date *set_date(){
+Date *setDate(){
+    Date *new = (Date *)malloc(sizeof(Date));
 
-        Date *new = (Date *)malloc(sizeof(Date));
+    printf("Insert date in the following format:\n DD/MM/AAAA \n");
+    scanf("%d/%d/%d",&new->day,&new->month,&new->year);
+    getchar();
 
-        printf("Insert date in the following format:\n DD/MM/AAAA \n");
-        scanf("%d/%d/%d",&new->day,&new->month,&new->year);
-        getchar();
-
-        return new;
-
+    return new;
 }
 
-Date change_date(Date date) { //é preciso
-
+Date changeDate(Date *date) {
+    //é preciso
 }
 
 /**
@@ -135,8 +128,7 @@ Date change_date(Date date) { //é preciso
  *  Creates and sets new date
  *
  **/
-Date validate_date(Date date){
-
+Date validateDate(Date *date){
 }
 
 /**
@@ -144,16 +136,19 @@ Date validate_date(Date date){
  * Compares if date1 is after date2
  *
  */
-int compare_date(Date date1, Date date2){
-	if ((date1)->year > (date2)->year){
+int compareDate(Date *date1, Date *date2){
+	if (date1->year > date2->year){
 		return 1;
 	}
-	else if ((date1)->year == (date2)->year && (date1)->month > (date2)->month){
+
+	else if (date1->year == date2->year && date1->month > date2->month){
 		return 1;
 	}
-	else if ((date1)->year == (date2)->year && (date1)->month == (date2)->month && (date1)->day > (date2)->day){
+
+	else if (date1->year == date2->year && date1->month == date2->month && date1->day > date2->day){
 		return 1;
 	}
+
 	else{
 		return 0;
 	}
