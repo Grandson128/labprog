@@ -1,14 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "kanban.c"
 
 int main(){
+    int opcao;
 
-    printf("	O nosso projeto em C para Laboratorio de Programacao\n");
+    printf("\e[1;1H\e[2J");
 
-    printf("		Behold the glorious menu \n Please, select one of following options\n");
+    printf("O nosso projeto em C para Laboratorio de Programacao\n");
 
-    printf("	1) Create new list\n 	2) Load previous list\n");
-    
-//tou só a fazer tempo até a teórica começar, ignorem
+    printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
+
+    printf("1) Create new list\n2) Load previous list\n\n");
+
+    scanf("%d", &opcao);
+
+    //tou só a fazer tempo até a teórica começar, ignorem
+    //<3
+
     return 0;
 }
