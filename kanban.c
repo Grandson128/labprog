@@ -13,7 +13,6 @@ Tasklist createTaskList(){
     aux = (Tasklist)malloc(sizeof(Node));
 
     if (aux != NULL) {
-        aux->lastID = 0;
         aux->info = 0;
         aux->task = NULL;
         aux->next = NULL;
@@ -95,13 +94,13 @@ Tasklist searchTask(Tasklist list, int task){
 
 /**
  * 
- * 
+ *
  * Add's task to list
  * Orders by Creation Date
  * @list - list to add task
  * @task - pointer to task to add
- * 
- * 
+ *
+ *
  **/
 void insertTask(Tasklist list, Task *task){
     Tasklist previous = list;
@@ -111,7 +110,7 @@ void insertTask(Tasklist list, Task *task){
     new->task = task;
     new->info = 0;
     list-> info++;
-    
+
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
@@ -157,8 +156,8 @@ Date *setDate(){
     return new;
 }
 
-Date change_date(Date date) { //TODO
-
+Date changeDate(Date *date) {
+    //é preciso
 }
 
 /**
