@@ -78,23 +78,47 @@ Tasklist searchTask(Tasklist list, int task){
     return current;
 }
 
+
+/**
+ *
+ *
+ * Add's task to list
+ * Orders by Creation Date
+ * @list - list to add task
+ * @task - pointer to task to add
+ *
+ *
+ **/
 void insertTask(Tasklist list, Task *task){
     Tasklist previous = list;
     Tasklist current = list->next;
-
     Tasklist new = (Tasklist)malloc(sizeof(Node));
 
     new->task = task;
     new->info = 0;
     list-> info++;
-
-
+    
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
     }
+
     else if(task != NULL && current != NULL){
-        //ToDo Loop comparing creation date
+
+        while (compareDate(task->creationDate,current->task->creationDate) == 1 && current->next != NULL ){
+            previous = current;
+            current = current->next;
+        }
+
+        if(compareDate(task->creationDate, current->task->creationDate != 1)){
+            previous->next = new;
+            new->next = current;
+        }
+
+        if(compareDate(task->creationDate, current->task->creationDate)){
+            new->next = current->next;
+            current->next = new;
+        }
     }
 }
 
