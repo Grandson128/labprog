@@ -92,13 +92,18 @@ Date *set_date(){
 
 }
 
-Date change_date(Date date) { é preciso
+Date change_date(Date date) { //é preciso?
 
+}
+
+Date compare_date(Date date1, Date date2) {
+
+    return 1 if (date1 > date2)
 }
 
 /**
  *
- *  Creates and sets new date
+ *  
  * 
  **/
 Date validate_date(Date date){
