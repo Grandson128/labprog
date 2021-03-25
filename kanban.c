@@ -5,9 +5,9 @@
 
 
 /**
- * 
- *  Creates an empty tasklist 
- * 
+ *
+ *  Creates an empty tasklist
+ *
  **/
 
 Tasklist createTaskList(){
@@ -24,9 +24,9 @@ Tasklist createTaskList(){
 }
 
 /**
- * 
+ *
  *  Removes completely from memory a given tasklsit
- * 
+ *
  **/
 Tasklist removeTaskList (Tasklist list){
     Tasklist temp_ptr;
@@ -53,7 +53,7 @@ int fullList (Tasklist list){
  * Returns a list where the first task element has the same identification as the one given
  * @list - task list with our task
  * @task - task identifier
- * 
+ *
  **/
 Tasklist searchTask (Tasklist list, int task){
     int targetValue = task;
@@ -71,12 +71,12 @@ Tasklist searchTask (Tasklist list, int task){
         current = NULL; /* Se elemento não encontrado*/
         return NULL;
     }
-    
+
     return current;
 }
 
 void insertTask (Tasklist list, Task *task){
-    
+
 
     Tasklist previous = list;
     Tasklist current = list->next;
@@ -86,8 +86,8 @@ void insertTask (Tasklist list, Task *task){
     new->task = task;
     new->info = 0;
     list-> info++;
-    
-    
+
+
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
@@ -112,9 +112,9 @@ void deleteTask (Tasklist list, int item){
 /**
  *
  *  Creates and sets new date
- * 
+ *
  **/
-Date *set_date(){ 
+Date *set_date(){
 
         Date *new = (Date *)malloc(sizeof(Date));
 
@@ -133,7 +133,7 @@ Date change_date(Date date) { //é preciso
 /**
  *
  *  Creates and sets new date
- * 
+ *
  **/
 Date validate_date(Date date){
 
