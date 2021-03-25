@@ -51,6 +51,19 @@ int fullList(Tasklist list){
     //ToDo
 }
 
+
+Task *createTask(void){
+
+    //TODO
+    Task *nova = (Task *)malloc(sizeof(Task));
+
+    
+
+
+
+}
+
+
 /**
  *
  *  Returns a list where the first task element has the same identification as the one given
