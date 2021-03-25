@@ -17,14 +17,15 @@ typedef struct task {
     int id;
     int priority; 
     char *description; 
-    Date creationDate;
-    Date targetDate;
-    Date finalDate;
+    Date *creationDate;
+    Date *targetDate;
+    Date *finalDate;
     Person person;
 }Task ;
 
 typedef struct node{
     int info;
+    int lastID;
     Task *task;
     Tasklist next;
 }Node;

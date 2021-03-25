@@ -14,6 +14,7 @@ Tasklist createTaskList(){
     Tasklist aux;
     aux = (Tasklist)malloc(sizeof(Node));
     if (aux != NULL) {
+        aux->lastID = 0;
         aux->info = 0;
         aux->task = NULL;
         aux->next = NULL;
@@ -85,7 +86,7 @@ void insertTask (Tasklist list, Task *task){
 
     new->task = task;
     new->info = 0;
-    list-> info++;
+    //list-> info++;
     
     
     if(task!=NULL && current == NULL){
@@ -126,7 +127,7 @@ Date *set_date(){
 
 }
 
-Date change_date(Date date) { //é preciso
+Date change_date(Date date) { //TODO
 
 }
 
@@ -144,7 +145,7 @@ Date validate_date(Date date){
  * Compares if date1 is after date2
  *
  */
-int compare_date(Date date1, Date date2){
+int compare_date(Date *date1, Date *date2){
 	if ((date1)->year > (date2)->year){
 		return 1;
 	}
