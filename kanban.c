@@ -80,7 +80,7 @@ Tasklist searchTask(Tasklist list, int task){
 
 
 /**
- *
+ * 
  *
  * Add's task to list
  * Orders by Creation Date
@@ -97,7 +97,7 @@ void insertTask(Tasklist list, Task *task){
     new->task = task;
     new->info = 0;
     list-> info++;
-    
+
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
