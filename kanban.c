@@ -120,28 +120,14 @@ Date *setDate(){
     return new;
 }
 
-<<<<<<< HEAD
-Date change_date(Date date) { //é preciso?
-=======
 Date change_date(Date date) { //TODO
->>>>>>> fd4658ec28cca2f6c29efb587aa60a662d8b0185
 
-}
-
-Date compare_date(Date date1, Date date2) {
-
-    return 1 if (date1 > date2)
 }
 
 /**
  *
-<<<<<<< HEAD
- *  
- * 
-=======
  *  Creates and sets new date
  *
->>>>>>> fd4658ec28cca2f6c29efb587aa60a662d8b0185
  **/
 Date validateDate(Date *date){
 }
@@ -152,19 +138,19 @@ Date validateDate(Date *date){
  *
  */
 int compareDate(Date *date1, Date *date2){
-	if (date1->year > date2->year){
-		return 1;
-	}
+    if (date1->year > date2->year){
+        return 1;
+    }
 
-	else if (date1->year == date2->year && date1->month > date2->month){
-		return 1;
-	}
+    else if (date1->year == date2->year && date1->month > date2->month){
+        return 1;
+    }
 
-	else if (date1->year == date2->year && date1->month == date2->month && date1->day > date2->day){
-		return 1;
-	}
+    else if (date1->year == date2->year && date1->month == date2->month && date1->day > date2->day){
+        return 1;
+    }
 
-	else{
-		return 0;
-	}
+    else{
+        return 0;
+    }
 }
