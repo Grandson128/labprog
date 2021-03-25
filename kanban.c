@@ -120,17 +120,59 @@ Date *setDate(){
     return new;
 }
 
-Date change_date(Date date) { //TODO
-
-}
-
 /**
  *
- *  Creates and sets new date
+ *  Validates the given date. Returns 0 if not valid.
  *
  **/
-Date validateDate(Date *date){
+int validateDate(Date *date){
+
+    int dd= (date->day);
+    int mm= (date->month);
+    int yy= (date->year);
+
+    if(yy>=2020)
+    {
+        if(mm>=1 && mm<=12)
+        {
+            if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
+                printf("Date is valid.\n");
+                return 1;
+            }
+            else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
+                printf("Date is valid.\n");
+                return 1;
+            }
+            else if((dd>=1 && dd<=28) && (mm==2)) {
+                printf("Date is valid.\n");
+                return 1;
+            }
+            else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
+                printf("Date is valid.\n");
+                return 1;
+            }
+            else {
+                printf("Day is invalid.\n");
+                return 0;
+            }
+        }
+        else
+        {
+            printf("Month is not valid.\n");
+            return 0;
+        }
+    }
+    else
+    {
+        printf("Year is not valid.\n");
+        return 0; // se calhar aqui este return é redondante
+    }
+ 
+    return 0;    
 }
+
+
+
 
 /**
  *

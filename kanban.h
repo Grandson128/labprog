@@ -61,4 +61,8 @@ void deleteTask (Tasklist list, int item);
 Tasklist searchTask (Tasklist list, int task); //Using task Identifier to search
 void printlist (Tasklist list);
 
+Date setDate();
+Date validateDate(Date *date);
+int compareDate(Date *date1, Date *date2); //isto está bem?
+
 #endif
