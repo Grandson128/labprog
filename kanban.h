@@ -68,4 +68,6 @@ Date *setDate();
 int validateDate(Date *date);
 int compareDate(Date *date1, Date *date2); //isto está bem?
 
+Person *setPerson();
+
 #endif

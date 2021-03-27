@@ -3,6 +3,7 @@
 #include "kanban.h"
 
 int TASKS_ID=0; //contagem de tasks criadas
+int PEOPLE_ID=0;
 
 /***********************************************************/
 /************************ TASKLISTS ************************/
@@ -93,13 +94,13 @@ Task *createTask(void){
 
 
     int MAX_SIZE=50;
-    int ID=TASK_ID++;
+    int ID=TASKS_ID++;
 
     Task *new = (Task *)malloc(sizeof(Task));
     new->id=ID;
 
     printf("\n Describe the task you would like to add\n");
-    new->*description=(char *)malloc(MAX_SIZE*sizeof(char));
+    new->description=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->description,MAX_SIZE,stdin);
 
     printf("\n Set a priority(1-10)for given task\n");
@@ -110,23 +111,22 @@ Task *createTask(void){
     }
 
     printf("\n When will the task start?\n");
-    new->*creationDate=setDate();
+    new->creationDate=setDate();
     if(validateDate(new->creationDate)==1){
         printf("\n Given date was not valid \n");
-        new->*creationDate=setDate();
+        new->creationDate=setDate();
     }
 
     printf("\n When do you plan to finish the task?\n");
-    new->*targetDate=setDate();
+    new->targetDate=setDate();
     if(validateDate(new->targetDate)==1){
         printf("\n Given date was not valid \n");
-        new->*targetDate=setDate();
+        new->targetDate=setDate();
     }
 
     //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
     printf("\n Who will be in charge?\n");
-    new->person=(char *)malloc(MAX_SIZE*sizeof(Person));
-    fgets(new->person,MAX_SIZE,stdin);
+    new->person=*setPerson();
 
 }
 
@@ -321,4 +321,21 @@ int compareDate(Date *date1, Date *date2){
     else{
         return 0;
     }
+}
+
+/*******************************************************/
+/************************ PEOPLE ***********************/
+/*******************************************************/
+
+Person *setPerson(){
+
+    Person *new = (Person *)malloc(sizeof(Person));
+
+    printf("Insert the name of who will be responsible\n");
+    scanf("%p",&new->name);
+
+    int ID=PEOPLE_ID++;
+    new->id=ID;
+
+    return new;
 }
