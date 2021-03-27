@@ -54,6 +54,14 @@ int fullTaskList(Tasklist list){
 
 int countTaskList(Tasklist list){
 
+    int count = 0;
+    while(list)
+    {
+        count++;
+        list=list->next;
+    }
+
+    return count; 
 }
 
 void printTaskList (Tasklist list){
