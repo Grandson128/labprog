@@ -31,7 +31,7 @@ Tasklist createTaskList(){
 Tasklist removeTaskList(Tasklist list){
     Tasklist temp_ptr;
 
-    while (emptyList(list) == 0){
+    while (emptyTaskList(list) == 0){
         temp_ptr = list;
         list = list->next;
         free(temp_ptr);
@@ -42,12 +42,26 @@ Tasklist removeTaskList(Tasklist list){
     return NULL;
 }
 
-int emptyList(Tasklist list){
+
+int emptyTaskList(Tasklist list){
     return (list->next == NULL ? 1 : 0);
 }
 
-int fullList(Tasklist list){
-    //ToDo
+//não há limite máximo definido para o tamanho da lista
+int fullTaskList(Tasklist list){
+   return 0;
+}
+
+int countTaskList(Tasklist list){
+
+}
+
+void printTaskList (Tasklist list){
+    Tasklist l = list->next; /* Salta o header */
+    while (l){
+    printf("%d", l->info);
+    l=l->next;
+    }
 }
 
 
@@ -90,6 +104,10 @@ Tasklist searchTask(Tasklist list, int task){
 
     return current;
 }
+
+
+
+
 
 
 /**
@@ -135,9 +153,18 @@ void insertTask(Tasklist list, Task *task){
     }
 }
 
-void deleteTask(Tasklist list, int item){
-    //ToDo
+void deleteTask(Tasklist list,int task){
+
+    Tasklist ant1=list;
+    Tasklist atual1=list->next;
+
+    searchTask(list, task);
+    if (atual1 != NULL) {
+        ant1->next = atual1->next;
+        free (atual1);
+    }
 }
+    
 
 /************************ DATES ************************/
 
