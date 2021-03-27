@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "kanban.h"
 
+int TASKS_ID=0; //contagem de tasks criadas
+
+/***********************************************************/
+/************************ TASKLISTS ************************/
+/***********************************************************/
+
+
 /**
  *
  *  Creates an empty tasklist
@@ -73,14 +80,53 @@ void printTaskList (Tasklist list){
 }
 
 
+
+
+
+
+
+/*******************************************************/
+/************************ TASKS ************************/
+/*******************************************************/
+
 Task *createTask(void){
 
-    //TODO
-    Task *nova = (Task *)malloc(sizeof(Task));
 
-    
+    int MAX_SIZE=50;
+    int ID=TASK_ID++;
 
+    Task *new = (Task *)malloc(sizeof(Task));
+    new->id=ID;
 
+    printf("\n Describe the task you would like to add\n");
+    new->*description=(char *)malloc(MAX_SIZE*sizeof(char));
+    fgets(new->description,MAX_SIZE,stdin);
+
+    printf("\n Set a priority(1-10)for given task\n");
+    scanf("%d",&new->priority);
+    if( new->priority<=0 || new->priority >=11 ){
+        printf("\n Please insert a valid number between 1 and 10");
+        scanf("%d",&new->priority);
+    }
+
+    printf("\n When will the task start?\n");
+    new->*creationDate=setDate();
+    if(validateDate(new->creationDate)==1){
+        printf("\n Given date was not valid \n");
+        new->*creationDate=setDate();
+    }
+
+    printf("\n When do you plan to finish the task?\n");
+    new->*targetDate=setDate();
+    if(validateDate(new->targetDate)==1){
+        printf("\n Given date was not valid \n");
+        new->*targetDate=setDate();
+    }
+
+    //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
+    printf("\n Who will be in charge?\n");
+    new->person=(char *)malloc(MAX_SIZE*sizeof(Person));
+    fgets(new->person,MAX_SIZE,stdin);
 
 }
 
@@ -174,7 +220,11 @@ void deleteTask(Tasklist list,int task){
 }
     
 
+
+/*******************************************************/
 /************************ DATES ************************/
+/*******************************************************/
+
 
 /**
  *
@@ -184,7 +234,7 @@ void deleteTask(Tasklist list,int task){
 Date *setDate(){
     Date *new = (Date *)malloc(sizeof(Date));
 
-    printf("Insert date in the following format:\n DD/MM/AAAA \n");
+    printf("Insert the date in the following format:\n DD/MM/AAAA \n");
     scanf("%d/%d/%d",&new->day,&new->month,&new->year);
     getchar();
 
@@ -198,7 +248,7 @@ Date changeDate(Date *date) {
 
 /**
  *
- *  Validates the given date. Returns 0 if not valid.
+ *  Validates the given date. Returns 1 if NOT valid.
  *
  **/
 int validateDate(Date *date){
@@ -213,38 +263,38 @@ int validateDate(Date *date){
         {
             if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
                 printf("Date is valid.\n");
-                return 1;
+                return 0;
             }
             else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
                 printf("Date is valid.\n");
-                return 1;
+                return 0;
             }
             else if((dd>=1 && dd<=28) && (mm==2)) {
                 printf("Date is valid.\n");
-                return 1;
+                return 0;
             }
             else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
                 printf("Date is valid.\n");
-                return 1;
+                return 0;
             }
             else {
-                printf("Day is invalid.\n");
-                return 0;
+                printf("Day is not valid.\n");
+                return 1;
             }
         }
         else
         {
             printf("Month is not valid.\n");
-            return 0;
+            return 1;
         }
     }
     else
     {
         printf("Year is not valid.\n");
-        return 0; // se calhar aqui este return é redondante
+        return 1; // se calhar aqui este return é redondante
     }
  
-    return 0;    
+    return 1;    
 }
 
 
