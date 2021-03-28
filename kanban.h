@@ -49,8 +49,11 @@ typedef struct node{
  **/
 Tasklist createTaskList();
 Tasklist removeTaskList (Tasklist list);
-int emptyList (Tasklist list);
-int fullList (Tasklist list);
+int emptyTaskList (Tasklist list);
+int fullTaskList (Tasklist list);
+int emptyTaskList(Tasklist list);
+int countTaskList(Tasklist list);
+void printTaskList (Tasklist list);
 
 void insertTask (Tasklist list, Task *task);
 void insertTodoTask (Tasklist list, Task *task);
@@ -64,5 +67,7 @@ void printlist (Tasklist list);
 Date *setDate();
 int validateDate(Date *date);
 int compareDate(Date *date1, Date *date2); //isto está bem?
+
+Person *setPerson();
 
 #endif

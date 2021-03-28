@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include "kanban.c"
 
+
+
 int main(){
-    int opcao;
+    int option;
 
     printf("\e[1;1H\e[2J");
 
@@ -11,12 +13,9 @@ int main(){
 
     printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
 
-    printf("1) Create new list\n2) Load previous list\n\n");
+    printf("1) Create new list\n 2) Load previous list\n\n");
 
-    scanf("%d", &opcao);
-
-    //tou só a fazer tempo até a teórica começar, ignorem
-    //<3
+    scanf("%d", &option);
 
     return 0;
 }
