@@ -1,4 +1,4 @@
-  
+
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 
@@ -21,17 +21,17 @@ typedef struct person{
     char *name;
 }Person;
 
-typedef struct node* Tasklist;
-
 typedef struct task {
     int id;
-    int priority; 
-    char *description; 
+    int priority;
+    char *description;
     Date *creationDate;
     Date *targetDate;
     Date *finalDate;
     Person person;
 }Task;
+
+typedef struct node* Tasklist;
 
 typedef struct node{
     int info;

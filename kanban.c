@@ -56,7 +56,7 @@ Task *createTask(void){
     //TODO
     Task *nova = (Task *)malloc(sizeof(Task));
 
-    
+
 
 
 
@@ -93,7 +93,7 @@ Tasklist searchTask(Tasklist list, int task){
 
 
 /**
- * 
+ *
  *
  * Add's task to list
  * Orders by Creation Date
@@ -123,7 +123,7 @@ void insertTask(Tasklist list, Task *task){
             current = current->next;
         }
 
-        if(compareDate(task->creationDate, current->task->creationDate != 1)){
+        if(compareDate(task->creationDate, current->task->creationDate) != 1){
             previous->next = new;
             new->next = current;
         }
@@ -135,8 +135,37 @@ void insertTask(Tasklist list, Task *task){
     }
 }
 
-void deleteTask(Tasklist list, int item){
+void deleteTask(Tasklist list, int targetValue){
     //ToDo
+    Tasklist previous = list;
+    Tasklist current = list->next;
+    int flag=0; //0 = antes do targetValue, 1= depois do targetValue
+    list->info--; //suponho que isto seja o size da tasklist
+
+    while(1){
+        //caso o targetValue nao se encontre na lista, nao fará nada
+        //caso se encontre, marca flag
+        if(current->task->id == targetValue){
+            flag=1;
+        }
+
+        previous = current;
+        current = (current)->next;
+
+        //anula ultima posiçao no final da pesquisa
+        if(current == NULL && flag==1){
+            previous = NULL;
+            break;
+        }
+
+        //a partir do target transfere todos os nós uma posiçao para trás
+        //elimina assim o target
+        if(flag==1){
+            previous->task = current->task;
+            previous->next = current->next;
+        }
+    }
+
 }
 
 /************************ DATES ************************/
@@ -151,14 +180,18 @@ Date *setDate(){
 
     printf("Insert date in the following format:\n DD/MM/AAAA \n");
     scanf("%d/%d/%d",&new->day,&new->month,&new->year);
-    getchar();
+    getchar(); //?
 
     return new;
 }
 
 
-Date changeDate(Date *date) {
-    //é preciso
+void changeDate(Date *date) { //void ou date * ? como apenas dados do apontador, assumi que fosse void
+    printf("Insert new date in the following format:\n DD/MM/AAAA \n");
+    scanf("%d/%d/%d",&date->day,&date->month,&date->year);
+    getchar(); //?
+
+    //return date;
 }
 
 /**
@@ -208,8 +241,8 @@ int validateDate(Date *date){
         printf("Year is not valid.\n");
         return 0; // se calhar aqui este return é redondante
     }
- 
-    return 0;    
+
+    return 0;
 }
 
 
