@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "kanban.h"
 
 int TASKS_ID=0; //contagem de tasks criadas
@@ -75,14 +76,21 @@ int countTaskList(Tasklist list){
 void printTaskList (Tasklist list){
     Tasklist l = list->next; /* Salta o header */
     while (l){
-    printf("%d", l->info);
-    l=l->next;
+
+        printf("Task ID: %d \n", l->task->id);
+        printf("    Description: %s \n", l->task->description);
+        printf("    Priority: %d \n", l->task->priority);
+        printf("    Assigned to: %s \n", l->task->person->name);
+        printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+        printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
+        
+        if(l->task->finalDate != NULL)
+            printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+
+        l=l->next;
     }
+
 }
-
-
-
-
 
 
 
@@ -127,6 +135,10 @@ Task *createTask(void){
     //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
     printf("\n Who will be in charge?\n");
     new->person=*setPerson();
+
+    new->finalDate=NULL;
+
+    return new;
 
 }
 

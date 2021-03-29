@@ -28,7 +28,7 @@ typedef struct task {
     Date *creationDate;
     Date *targetDate;
     Date *finalDate;
-    Person person;
+    Person *person;
 }Task;
 
 typedef struct node* Tasklist;
