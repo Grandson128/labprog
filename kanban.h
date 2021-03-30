@@ -16,11 +16,6 @@ typedef struct date{
     int year;
 }Date;
 
-typedef struct person{
-    int id;
-    char *name;
-}Person;
-
 typedef struct task {
     int id;
     int priority;
@@ -28,7 +23,7 @@ typedef struct task {
     Date *creationDate;
     Date *targetDate;
     Date *finalDate;
-    Person *person;
+    char *person;
 }Task;
 
 typedef struct node* Tasklist;
@@ -68,6 +63,5 @@ Date *setDate();
 int validateDate(Date *date);
 int compareDate(Date *date1, Date *date2); //isto está bem?
 
-Person *setPerson();
 
 #endif

@@ -47,7 +47,6 @@ Tasklist removeTaskList(Tasklist list){
     }
 
     free(list);
-
     return NULL;
 }
 
@@ -77,10 +76,10 @@ void printTaskList (Tasklist list){
     Tasklist l = list->next; /* Salta o header */
     while (l){
 
-        printf("Task ID: %d \n", l->task->id);
+        printf("\n ---Task ID: %d--- \n", l->task->id);
         printf("    Description: %s \n", l->task->description);
         printf("    Priority: %d \n", l->task->priority);
-        printf("    Assigned to: %s \n", l->task->person->name);
+        printf("    Assigned to: %s \n", l->task->person);
         printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
         
@@ -100,12 +99,12 @@ void printTaskList (Tasklist list){
 
 Task *createTask(void){
 
-
     int MAX_SIZE=50;
     int ID=TASKS_ID++;
 
     Task *new = (Task *)malloc(sizeof(Task));
     new->id=ID;
+    printf("\e[1;1H\e[2J");
 
     printf("\n Describe the task you would like to add\n");
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
@@ -134,7 +133,8 @@ Task *createTask(void){
 
     //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
     printf("\n Who will be in charge?\n");
-    new->person=*setPerson();
+    new->person=(char *)malloc(MAX_SIZE*sizeof(char));
+    fgets(new->person,MAX_SIZE,stdin);
 
     new->finalDate=NULL;
 
@@ -172,10 +172,6 @@ Tasklist searchTask(Tasklist list, int task){
 }
 
 
-
-
-
-
 /**
  *
  *
@@ -194,6 +190,7 @@ void insertTask(Tasklist list, Task *task){
     new->task = task;
     new->info = 0;
     list-> info++;
+    list->lastID = task->id;
 
     if(task!=NULL && current == NULL){
         new->next = current;
@@ -219,16 +216,30 @@ void insertTask(Tasklist list, Task *task){
     }
 }
 
-void deleteTask(Tasklist list,int task){
+void deleteTask(Tasklist list, int targetTaskId){
+    
+    Tasklist current  = list->next;
+    Tasklist previous = list;
+    
 
-    Tasklist ant1=list;
-    Tasklist atual1=list->next;
-
-    searchTask(list, task);
-    if (atual1 != NULL) {
-        ant1->next = atual1->next;
-        free (atual1);
+    if (current != NULL && current->task->id == targetTaskId){
+        previous->next = current->next;
+        free(current);
+        return;
     }
+    
+
+    while(current->next != NULL && current->task->id != targetTaskId){
+        previous = current;
+        current = current->next;
+    }
+
+    if(current == NULL)
+        return;
+    
+    previous->next = current->next;
+    free(current);
+
 }
 
 
@@ -273,7 +284,7 @@ int validateDate(Date *date){
     int mm= (date->month);
     int yy= (date->year);
 
-    if(yy>=2020)
+    if(yy>=0)
     {
         if(mm>=1 && mm<=12)
         {
@@ -339,19 +350,4 @@ int compareDate(Date *date1, Date *date2){
     }
 }
 
-/*******************************************************/
-/************************ PEOPLE ***********************/
-/*******************************************************/
 
-Person *setPerson(){
-
-    Person *new = (Person *)malloc(sizeof(Person));
-
-    printf("Insert the name of who will be responsible\n");
-    scanf("%p",&new->name);
-
-    int ID=PEOPLE_ID++;
-    new->id=ID;
-
-    return new;
-}
