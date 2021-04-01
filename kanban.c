@@ -131,14 +131,14 @@ Task *createTask(void){
     printf("\nWhen will the task start?\n");
     new->creationDate=setDate();
     if(validateDate(new->creationDate)==1){
-        printf("\nGiven date was not valid\n");
+        printf("Given date was not valid\n");
         new->creationDate=setDate();
     }
 
     printf("\nWhen do you plan to finish the task?\n");
     new->targetDate=setDate();
     if(validateDate(new->targetDate)==1){
-        printf("\nGiven date was not valid\n");
+        printf("Given date was not valid\n");
         new->targetDate=setDate();
     }
 
@@ -387,7 +387,7 @@ void deleteTask(Tasklist list, int targetTaskId){
 
 /**
  * Thanos snap on tasks
- * 
+ *
  * @list - list with task pointer
  * @todoList - list with task pointer
  * @doingList - list with task pointer
@@ -559,7 +559,98 @@ void CreateFile(const char *filename) {
 }
 
 
+//introduzir tasks de um certo file na tasklist indicada (inicio do programa)
+/*
+Task readFiles(const char *filename, int contagem, int flag){
+    FILE *file;
+    file = fopen(filename, "r");
+    int MAX_SIZE=50;
+    int ID=TASKS_ID++;
+    char buffer[MAX_SIZE];
+    Task *new = (Task *)malloc(sizeof(Task));
 
-//read_files();
+    if(file == NULL){
+        exit(EXIT_FAILURE);
+    }
 
-//save_in_file();
+    for(int i=0; i<contagem*8; i++){ //ignorar tasks já introduzidas
+        fgets(buffer, MAX_SIZE, file);
+    }
+
+    while(fgets(buffer, MAX_SIZE, file)){   //ler linha-a-linha o ficheiro
+        if(buffer[0] == 'T'){   //Caso encontre o inicio de uma nova task
+            int line=1;
+            new->id=ID;
+            new->finalDate=NULL;
+            while(fgets(buffer,MAX_SIZE,file)){
+                if(line==1){    //Descriçao
+                    int i=0;
+                    char descricao[MAX_SIZE];
+                    while(buffer[i+18]!='\n'){  //inicio da descriçao=> i=18. fim da descriçao=> '\n'
+                        descricao[i]=buffer[i+18];
+                        i++;
+                    }
+                    new->description= (char *)malloc(MAX_SIZE*sizeof(char)); //nao sei se é necessario
+                    new->description= descricao;
+                }
+                else if(line==2){    //Prioridade
+                    if(buffer[15]=='0'){
+                        new->priority = 10; //unico numero com 2 dígitos possivel
+                    }
+                    else{
+                        new->priority = buffer[14];
+                    }
+                }
+                else if(line==3){    //Pessoa
+                    int i=0;
+                    char nome[MAX_SIZE];
+                    while(buffer[i+17] != '\n'){
+                        nome[i]=buffer[i+17];
+                        i++;
+                    }
+                    new->person= (char *)malloc(MAX_SIZE*sizeof(char));  //nao sei se é necessario
+                    new->person= nome;
+                }
+                else if(line==4){    //Data de Criaçao
+                    new->creationDate->day = buffer[19]*10 + buffer[20];
+                    new->creationDate->month = buffer[22]*10 + buffer[23];
+                    new->creationDate->year = buffer[25]*1000 + buffer[26]*100 + buffer[27]*10 + buffer[28];
+                }
+                else if(line==5){
+                    new->targetDate->day = buffer[15]*10 + buffer[16];
+                    new->targetDate->month = buffer[18]*10 + buffer[19];
+                    new->targetDate->year = buffer[21]*1000 + buffer[22]*100 + buffer[23]*10 + buffer[24];
+                }
+                line++;
+
+            }
+        }
+    }
+    fclose(file);
+    return new;
+}
+*/
+
+void saveInFile(const char *filename, Tasklist list){
+    FILE *file;
+    file = fopen(filename, "w");
+
+    //creationDateList
+    Tasklist l = list->next; /* Salta o header */
+    while (l){
+        fprintf(file,"Task ID: %d {\n", l->task->id);
+        fprintf(file,"    Description: %s", l->task->description);
+        fprintf(file,"    Priority: %d \n", l->task->priority);
+        fprintf(file,"    Assigned to: %s", l->task->person);
+        fprintf(file,"    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+        fprintf(file,"    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
+
+        if(l->task->finalDate != NULL)
+            fprintf(file,"    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+
+        l=l->next;
+        fprintf(file,"}\n\n");
+    }
+
+    fclose(file);
+}

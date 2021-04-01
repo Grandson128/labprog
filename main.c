@@ -27,7 +27,8 @@ void menu(int option){
             scanf("%d", &taskId);
             deleteTask(creationDateList, taskId);
             printf("Task Eliminated\nPress ENTER to proceed\n");
-            getchar();
+            getchar();//nao está a funcionar, o print de cima nao chega a aparecer
+                      //nem espera pelo input. help!!!
             break;
 
         case 3:
@@ -45,8 +46,21 @@ void menu(int option){
 
 int main(){
     int option;
+    int flag=0;
+    int contagem=0;
     todoList = createTaskList();
     creationDateList = createTaskList();
+
+    if(!(FileExists("data"))){
+        CreateFile("data");
+    }
+
+    /*while(flag==0){
+        Task *new = readFiles("data",contagem,flag);
+        //insert new
+        //contagem++;
+    }*/
+
     while (option != 0){
         clearScreen();
         printf("O nosso projeto em C para Laboratorio de Programacao\n");
@@ -61,15 +75,8 @@ int main(){
         menu(option);
     }
 
+    saveInFile("data", creationDateList);
 
-    printf("I CREATE FILE NOW YES\n");
-
-    FileExists("ola");
-
-    CreateFile("ola");
-
-    FileExists("ola");
-
-
+    clearScreen();
     return 0;
 }
