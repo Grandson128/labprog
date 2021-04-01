@@ -381,8 +381,25 @@ void deleteTask(Tasklist list, int targetTaskId){
     previous->next = current->next;
     free(current);
 
+    //TODO: Handle task removal in file
+
 }
 
+/**
+ * Thanos snap on tasks
+ * 
+ * @list - list with task pointer
+ * @todoList - list with task pointer
+ * @doingList - list with task pointer
+ * @doneList - list with task pointer
+ * @targetTaskId - task identifier
+ **/
+void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist doneList, int targetTaskId){
+    deleteTask(list, targetTaskId);
+    deleteTask(todoList, targetTaskId);
+    deleteTask(doingList, targetTaskId);
+    deleteTask(doneList, targetTaskId);
+}
 
 
 /*******************************************************/
