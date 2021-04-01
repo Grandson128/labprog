@@ -7,6 +7,10 @@
 int TASKS_ID=0; //contagem de tasks criadas
 int PEOPLE_ID=0;
 
+void clearScreen(){
+    printf("\e[1;1H\e[2J");
+}
+
 /***********************************************************/
 /************************ TASKLISTS ************************/
 /***********************************************************/
@@ -76,23 +80,24 @@ int countTaskList(Tasklist list){
 /**
  *
  *  Prints task list
- *  
+ *
  **/
 void printTaskList (Tasklist list){
     Tasklist l = list->next; /* Salta o header */
     while (l){
 
-        printf("\n ---Task ID: %d--- \n", l->task->id);
-        printf("    Description: %s \n", l->task->description);
+        printf("Task ID: %d {\n", l->task->id);
+        printf("    Description: %s", l->task->description);
         printf("    Priority: %d \n", l->task->priority);
-        printf("    Assigned to: %s \n", l->task->person);
+        printf("    Assigned to: %s", l->task->person);
         printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
-        
+
         if(l->task->finalDate != NULL)
             printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
 
         l=l->next;
+        printf("}\n\n");
     }
 
 }
@@ -110,35 +115,35 @@ Task *createTask(void){
 
     Task *new = (Task *)malloc(sizeof(Task));
     new->id=ID;
-    printf("\e[1;1H\e[2J");
+    clearScreen();
 
-    printf("\n Describe the task you would like to add\n");
+    printf("Describe the task you would like to add\n\n   => ");
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->description,MAX_SIZE,stdin);
 
-    printf("\n Set a priority(1-10)for given task\n");
+    printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
     if( new->priority<=0 || new->priority >=11 ){
-        printf("\n Please insert a valid number between 1 and 10");
+        printf("\nPlease insert a valid number between 1 and 10\n");
         scanf("%d",&new->priority);
     }
 
-    printf("\n When will the task start?\n");
+    printf("\nWhen will the task start?\n");
     new->creationDate=setDate();
     if(validateDate(new->creationDate)==1){
-        printf("\n Given date was not valid \n");
+        printf("\nGiven date was not valid\n");
         new->creationDate=setDate();
     }
 
-    printf("\n When do you plan to finish the task?\n");
+    printf("\nWhen do you plan to finish the task?\n");
     new->targetDate=setDate();
     if(validateDate(new->targetDate)==1){
-        printf("\n Given date was not valid \n");
+        printf("\nGiven date was not valid\n");
         new->targetDate=setDate();
     }
 
     //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
-    printf("\n Who will be in charge?\n");
+    printf("\nWho will be in charge?\n\n   => ");
     new->person=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->person,MAX_SIZE,stdin);
 
@@ -243,7 +248,7 @@ void insertTodoTask (Tasklist list, Task *task){
             previous = current;
             current = current->next;
         }
-        
+
         if(task->priority > current->task->priority){
             previous->next = new;
             new->next = current;
@@ -252,7 +257,7 @@ void insertTodoTask (Tasklist list, Task *task){
             current->next = new;
 
         }else if(task->priority == current->task->priority){
-            
+
             while (compareDate(task->creationDate,current->task->creationDate) == 1 && (task->priority == current->task->priority) && current->next != NULL ){
                 previous = current;
                 current = current->next;
@@ -350,21 +355,21 @@ void insertDoneTask (Tasklist list, Task *task){
 
 /**
  * Removes task from task list
- * 
+ *
  * @list - list with task pointer
  * @targetTaskId - task identifier
  **/
 void deleteTask(Tasklist list, int targetTaskId){
-    
+
     Tasklist current  = list->next;
     Tasklist previous = list;
-    
+
     if (current != NULL && current->task->id == targetTaskId){
         previous->next = current->next;
         free(current);
         return;
     }
-    
+
     while(current->next != NULL && current->task->id != targetTaskId){
         previous = current;
         current = current->next;
@@ -372,7 +377,7 @@ void deleteTask(Tasklist list, int targetTaskId){
 
     if(current == NULL)
         return;
-    
+
     previous->next = current->next;
     free(current);
 
@@ -393,7 +398,7 @@ void deleteTask(Tasklist list, int targetTaskId){
 Date *setDate(){
     Date *new = (Date *)malloc(sizeof(Date));
 
-    printf("Insert the date in the following format:\n DD/MM/AAAA \n");
+    printf("Insert the date in the following format: DD/MM/AAAA\n\n   => ");
     scanf("%d/%d/%d",&new->day,&new->month,&new->year);
     getchar(); //?
 
@@ -425,23 +430,23 @@ int validateDate(Date *date){
         if(mm>=1 && mm<=12)
         {
             if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
-                printf("Date is valid.\n");
+                printf("\nDate is valid.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
-                printf("Date is valid.\n");
+                printf("\nDate is valid.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=28) && (mm==2)) {
-                printf("Date is valid.\n");
+                printf("\nDate is valid.\n");
                 return 0;
             }
             else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
-                printf("Date is valid.\n");
+                printf("\nDate is valid.\n");
                 return 0;
             }
             else {
-                printf("Day is not valid.\n");
+                printf("\nDay is not valid.\n");
                 return 1;
             }
         }
@@ -495,7 +500,7 @@ int compareDate(Date *date1, Date *date2){
 
 
 /*
- * Check if a file exist using fopen() function 
+ * Check if a file exist using fopen() function
  * return 1 if the file exist otherwise return 0
  */
 int FileExists(const char *filename){
@@ -515,8 +520,8 @@ int FileExists(const char *filename){
 void CreateFile(const char *filename) {
 
     FILE *file;
-    /* 
-     * Open file in w (write) mode. 
+    /*
+     * Open file in w (write) mode.
      * "data/file1.txt" is complete path to create file
      */
     file = fopen(filename, "w");
