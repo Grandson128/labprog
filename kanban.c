@@ -73,6 +73,11 @@ int countTaskList(Tasklist list){
     return count;
 }
 
+/**
+ *
+ *  Prints task list
+ *  
+ **/
 void printTaskList (Tasklist list){
     Tasklist l = list->next; /* Salta o header */
     while (l){
@@ -174,14 +179,10 @@ Tasklist searchTask(Tasklist list, int task){
 
 
 /**
- *
- *
  * Add's task to list
  * Orders by Creation Date
  * @list - list to add task
  * @task - pointer to task to add
- *
- *
  **/
 void insertTask(Tasklist list, Task *task){
     Tasklist previous = list;
@@ -217,19 +218,153 @@ void insertTask(Tasklist list, Task *task){
     }
 }
 
+/**
+ * Add's task to list
+ * Orders by Priority and by Creation Date
+ * @list - list to add task
+ * @task - pointer to task to add
+ **/
+void insertTodoTask (Tasklist list, Task *task){
+    Tasklist previous = list;
+    Tasklist current = list->next;
+    Tasklist new = (Tasklist)malloc(sizeof(Node));
+
+    new->task = task;
+    new->info = 0;
+    list-> info++;
+    list->lastID = task->id;
+
+    if(task!=NULL && current == NULL){
+        new->next = current;
+        previous->next = new;
+    }else if(task!=NULL && current != NULL){
+
+        while (task->priority < current->task->priority){
+            previous = current;
+            current = current->next;
+        }
+        
+        if(task->priority > current->task->priority){
+            previous->next = new;
+            new->next = current;
+        }else if(task->priority < current->task->priority){
+            new->next = current->next;
+            current->next = new;
+
+        }else if(task->priority == current->task->priority){
+            
+            while (compareDate(task->creationDate,current->task->creationDate) == 1 && (task->priority == current->task->priority) && current->next != NULL ){
+                previous = current;
+                current = current->next;
+            }
+
+            if(compareDate(task->creationDate, current->task->creationDate) != 1){
+                previous->next = new;
+                new->next = current;
+            }
+
+            if(compareDate(task->creationDate, current->task->creationDate)){
+                new->next = current->next;
+                current->next = new;
+            }
+
+        }
+
+    }
+
+}
+
+/**
+ * Add's task to list
+ * Orders by persons name
+ * @list - list to add task
+ * @task - pointer to task to add
+ **/
+void insertDoingTask (Tasklist list, Task *task){
+    Tasklist previous = list;
+    Tasklist current = list->next;
+    Tasklist new = (Tasklist)malloc(sizeof(Node));
+
+    new->task = task;
+    new->info = 0;
+    list-> info++;
+    list->lastID = task->id;
+
+    while(strcmp(task->person, current->task->person) > 0 && current->next != NULL){
+        previous = current;
+        current = current->next;
+    }
+
+    if(strcmp(task->person, current->task->person) < 0){
+        previous->next = new;
+        new->next = current;
+    }else{
+        new->next = current->next;
+        current->next = new;
+    }
+
+
+}
+
+/**
+ * Add's task to list
+ * Orders by final date
+ * @list - list to add task
+ * @task - pointer to task to add
+ **/
+void insertDoneTask (Tasklist list, Task *task){
+    Tasklist previous = list;
+    Tasklist current = list->next;
+    Tasklist new = (Tasklist)malloc(sizeof(Node));
+
+    new->task = task;
+    new->info = 0;
+    list-> info++;
+    list->lastID = task->id;
+
+    if(task!=NULL && current == NULL){
+        new->next = current;
+        previous->next = new;
+    }
+
+    else if(task != NULL && current != NULL){
+
+        while (compareDate(task->finalDate,current->task->finalDate) == 1 && current->next != NULL ){
+            previous = current;
+            current = current->next;
+        }
+
+        if(compareDate(task->finalDate, current->task->finalDate) != 1){
+            previous->next = new;
+            new->next = current;
+        }
+
+        if(compareDate(task->finalDate, current->task->finalDate)){
+            new->next = current->next;
+            current->next = new;
+        }
+    }
+
+
+}
+
+/**
+ * Removes task from task list
+ * 
+ * @list - list with task pointer
+ * @targetTaskId - task identifier
+ **/
 void deleteTask(Tasklist list, int targetTaskId){
     
     Tasklist current  = list->next;
     Tasklist previous = list;
     
-
     if (current != NULL && current->task->id == targetTaskId){
         previous->next = current->next;
         free(current);
         return;
     }
     
-
     while(current->next != NULL && current->task->id != targetTaskId){
         previous = current;
         current = current->next;
