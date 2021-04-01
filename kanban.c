@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "kanban.h"
+#include <string.h>
 
 int TASKS_ID=0; //contagem de tasks criadas
 int PEOPLE_ID=0;
@@ -339,3 +340,61 @@ Person *setPerson(){
 
     return new;
 }
+
+
+
+/*******************************************************/
+/************************ FILES ************************/
+/*******************************************************/
+
+
+
+/*
+ * Check if a file exist using fopen() function 
+ * return 1 if the file exist otherwise return 0
+ */
+int FileExists(const char *filename){
+
+    /* try to open file to read */
+    FILE *file;
+
+
+    if (file = fopen(filename, "r")){
+        fclose(file);
+        return 1;
+    }
+
+    return 0;
+}
+
+void CreateFile(const char *filename) {
+
+    FILE *file;
+    /* 
+     * Open file in w (write) mode. 
+     * "data/file1.txt" is complete path to create file
+     */
+    file = fopen(filename, "w");
+
+    /* fopen() return NULL if last operation was unsuccessful */
+    if(file == NULL)
+    {
+        /* File not created hence exit */
+        printf("Unable to create file.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("File created and saved successfully. \n");
+
+    fclose(file);
+
+
+}
+
+
+
+//read_files();
+
+//save_in_file();
+
+

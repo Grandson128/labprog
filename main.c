@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+
+#include <string.h>
 #include "kanban.c"
 
 
@@ -16,6 +18,15 @@ int main(){
     printf("1) Create new list\n 2) Load previous list\n\n");
 
     scanf("%d", &option);
+
+    printf(" I CREATE FILE NOW YES\n");
+
+    FileExists("ola");
+
+    CreateFile("ola");
+
+    FileExists("ola");
+
 
     return 0;
 }
