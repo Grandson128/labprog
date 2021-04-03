@@ -7,6 +7,7 @@
 int TASKS_ID=0; //contagem de tasks criadas
 int PEOPLE_ID=0;
 int MAX_DOING_TASKS=5; //max number of doing tasks
+int MAX_SIZE=50;
 
 void clearScreen(){
     printf("\e[1;1H\e[2J");
@@ -118,7 +119,7 @@ void printTaskList (Tasklist list){
 
 Task *createTask(void){
 
-    int MAX_SIZE=50;
+    
     int ID=TASKS_ID++;
 
     Task *new = (Task *)malloc(sizeof(Task));
