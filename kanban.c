@@ -6,7 +6,7 @@
 
 int TASKS_ID=0; //contagem de tasks criadas
 int PEOPLE_ID=0;
-
+int MAX_DOING_TASKS=5; //max number of doing tasks
 /***********************************************************/
 /************************ TASKLISTS ************************/
 /***********************************************************/
@@ -79,8 +79,15 @@ int countTaskList(Tasklist list){
  *  
  **/
 void printTaskList (Tasklist list){
-    Tasklist l = list->next; /* Salta o header */
-    while (l){
+    Tasklist l = createTaskList();
+    if(list->next != NULL)
+        l = list->next; /* Salta o header */
+    else{
+        printf("Lista vazia\n"); 
+        return;
+    }
+
+    while (l != NULL){
 
         printf("\n ---Task ID: %d--- \n", l->task->id);
         printf("    Description: %s \n", l->task->description);
@@ -156,8 +163,7 @@ Task *createTask(void){
  *  @task - task identifier
  *
  **/
-Tasklist searchTask(Tasklist list, int task){
-
+Task *searchTask(Tasklist list, int task){
     int targetValue = task;
     Tasklist previous = list;
     Tasklist current = list->next;
@@ -167,16 +173,46 @@ Tasklist searchTask(Tasklist list, int task){
         current = (current)->next;
     }
 
-    free(previous);
+    //free(previous);
 
     if ((current) != NULL && (current)->task->id != targetValue){
         current = NULL; /* Se elemento não encontrado*/
         return NULL;
     }
-
-    return current;
+    
+    return current->task;
 }
 
+/**
+ * Function to check if a task is in a given list
+ * 
+ * @list - List with task's
+ * @targetTaskId - Task identifier
+ * 
+ * Return:
+ * 1 - Task found in list
+ * 0 - Task not found
+*/
+int taskIn(Tasklist list, int targetTaskId){  
+    Tasklist current  = list->next;
+    Tasklist previous = list;
+    
+    if (current != NULL && current->task->id == targetTaskId){
+        return 1;
+    }
+    
+    while(current->next != NULL && current->task->id != targetTaskId){
+        previous = current;
+        current = current->next;
+    }
+
+    if(current != NULL && current->task != NULL && current->task->id == targetTaskId){
+        return 1;
+    }else{
+        return 0; 
+    }
+
+}
 
 /**
  * Add's task to list
@@ -285,11 +321,19 @@ void insertDoingTask (Tasklist list, Task *task){
     Tasklist current = list->next;
     Tasklist new = (Tasklist)malloc(sizeof(Node));
 
+    if(task == NULL)
+        return;
+
     new->task = task;
     new->info = 0;
-    list-> info++;
+    list->info++;
     list->lastID = task->id;
 
+    if (emptyTaskList(list) == 1){
+        list->next = new;
+        return;
+    }
+    
     while(strcmp(task->person, current->task->person) > 0 && current->next != NULL){
         previous = current;
         current = current->next;
@@ -302,8 +346,6 @@ void insertDoingTask (Tasklist list, Task *task){
         new->next = current->next;
         current->next = new;
     }
-
-
 }
 
 /**
@@ -317,14 +359,21 @@ void insertDoneTask (Tasklist list, Task *task){
     Tasklist current = list->next;
     Tasklist new = (Tasklist)malloc(sizeof(Node));
 
+    printf("\n Task final date?\n");
+    task->finalDate=setDate();
+    if(validateDate(task->finalDate)==1){
+        printf("\n Given date was not valid \n");
+        task->finalDate=setDate();
+    }
+
     new->task = task;
     new->info = 0;
     list-> info++;
     list->lastID = task->id;
 
-    if(task!=NULL && current == NULL){
-        new->next = current;
-        previous->next = new;
+    if (emptyTaskList(list) == 1){
+        list->next = new;
+        return;
     }
 
     else if(task != NULL && current != NULL){
@@ -375,7 +424,7 @@ void deleteTask(Tasklist list, int targetTaskId){
     
     previous->next = current->next;
     free(current);
-
+    list->info--;
     //TODO: Handle task removal in file
 
 }
@@ -394,6 +443,69 @@ void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist do
     deleteTask(todoList, targetTaskId);
     deleteTask(doingList, targetTaskId);
     deleteTask(doneList, targetTaskId);
+}
+
+/**
+ * Function to "pause" the program until user input
+ *  2 getchat used because only 1 was beeing ignored
+*/
+void mypause ( void ) { 
+  printf ( "Press [Enter] to continue . . .\n");
+  fflush (NULL);
+  getchar();
+  getchar();
+} 
+
+/**
+ * Function to assign a task from todo list to the doing list
+ * 
+ * @todolist - List with Todo tasks
+ * @doinglist - List with Doing tasks
+ * @taskId - Task identifier
+ * 
+*/
+void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
+    if (taskIn(todoList, taskId) == 1){
+
+        if(doingList->info >= MAX_DOING_TASKS){
+            printf("Número máximo de tarefas atingido\n");
+            mypause();
+            return;
+        }
+
+        insertDoingTask(doingList, searchTask(todoList, taskId));
+        printf("\e[1;1H\e[2J");
+        //printTaskList(doingList);
+        deleteTask(todoList, taskId);
+        printf("Tarefa iniciada\n");
+
+    }else{
+        printf("Tarefa inválida, tente novamente\n");
+    }
+    mypause();
+}
+
+/**
+ * Function to assign a task from doing list to the done list
+ * 
+ * @todolist - List with Doing tasks
+ * @doinglist - List with Done tasks
+ * @taskId - Task identifier
+ * 
+*/
+void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
+    if (taskIn(doingList, taskId) == 1){
+        insertDoneTask(doneList, searchTask(doingList, taskId));
+        printf("\e[1;1H\e[2J");
+        //printTaskList(doneList);
+        deleteTask(doingList, taskId);
+        printf("Tarefa terminada\n");
+
+    }else{
+        printf("Tarefa inválida, tente novamente\n");
+    }
+
+    mypause();
 }
 
 

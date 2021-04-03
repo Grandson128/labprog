@@ -54,9 +54,14 @@ void insertTask (Tasklist list, Task *task);
 void insertTodoTask (Tasklist list, Task *task);
 void insertDoingTask (Tasklist list, Task *task);
 void insertDoneTask (Tasklist list, Task *task);
+void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId);
+void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId);
+void mypause (void);
+void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist doneList, int targetTaskId);
+int taskIn(Tasklist list, int targetTaskId);
 
 void deleteTask (Tasklist list, int item);
-Tasklist searchTask (Tasklist list, int task); //Using task Identifier to search
+Task *searchTask (Tasklist list, int task); //Using task Identifier to search
 void printlist (Tasklist list);
 
 Date *setDate();
