@@ -15,19 +15,29 @@ void menu(int option){
     switch (option){
         case 1:
             newTask = createTask();
-
             insertTask(creationDateList, newTask);
             insertTodoTask(todoList, newTask);
+            clearScreen();
             printTaskList(creationDateList);
+            printf("Press ENTER to proceed\n");
             getchar();
             break;
+
         case 2:
-            printf("Identificador da tarefa a eliminar\n");
+            clearScreen();
+            printTaskList(creationDateList);
+            printf("Insert the Task ID you wish to delete\n\n   => ");
             scanf("%d", &taskId);
             deleteTask(creationDateList, taskId);
-             break;
+            printf("Task Eliminated\nPress ENTER to proceed\n");
+            getchar();//nao está a funcionar, o print de cima nao chega a aparecer
+                      //nem espera pelo input. help!!!
+            break;
+
         case 3:
+            clearScreen();
             printTaskList(creationDateList);
+            printf("Press ENTER to proceed\n");
             getchar();
             break;
         case 4:
@@ -69,20 +79,31 @@ void menu(int option){
 
         default:
             break;
-        }
-}
 
+    }
+}
 
 int main(){
     int option;
+    int flag=0;
+    int contagem=0;
     todoList = createTaskList();
     creationDateList = createTaskList();   
     doingList = createTaskList();
     doneList = createTaskList();
 
-    while (option != 0){
-        printf("\e[1;1H\e[2J");
+    if(!(FileExists("data"))){
+        CreateFile("data");
+    }
 
+    /*while(flag==0){
+        Task *new = readFiles("data",contagem,flag);
+        //insert new
+        //contagem++;
+    }*/
+
+    while (option != 0){
+        clearScreen();
         printf("O nosso projeto em C para Laboratorio de Programacao\n");
 
         printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
@@ -95,15 +116,8 @@ int main(){
         menu(option);
     }
 
+    saveInFile("data", creationDateList);
 
-    printf(" I CREATE FILE NOW YES\n");
-
-    FileExists("ola");
-
-    CreateFile("ola");
-
-    FileExists("ola");
-
-
+    clearScreen();
     return 0;
 }
