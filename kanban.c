@@ -495,7 +495,7 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
 
         char c;
         while((c = getchar()) != '\n' && c != EOF); //limpa o stdin para o fgets funcionar. o fflush nao estava a funcionar
-        
+
         //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
         printf("\nWho will be in charge?\n\n   => ");
         new->person=(char *)malloc(50*sizeof(char));
@@ -506,6 +506,27 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
         //printTaskList(doingList);
         deleteTask(todoList, taskId);
         printf("Task iniciated\n\n");
+
+    }
+    else {
+        printf("Invalid task, try again\n");
+    }
+    mypause();
+}
+
+void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
+    if (taskIn(doingList, taskId) == 1){
+        Task *new = searchTask(doingList,taskId);
+
+        char c;
+        while((c = getchar()) != '\n' && c != EOF);
+
+        new->person = NULL;
+
+        insertTodoTask(todoList,new);
+        clearScreen();
+        deleteTask(doingList,taskId);
+        printf("Task moved to To Do\n\n");
 
     }
     else {
@@ -652,23 +673,33 @@ int compareDate(Date *date1, Date *date2){
 
 
 void changePerson(Tasklist list, int targetTaskId){
-
-    Tasklist current  = list->next;
-    Tasklist previous = list;
-    printf("Insert new admin name for this task\n   => ");
+    printf("\nInsert new admin name for this task\n\n   => ");
+    Task *new = searchTask(list,targetTaskId);
+    char c;
+    while((c = getchar()) != '\n' && c != EOF);
+    new->person=(char *)malloc(50*sizeof(char));
+    fgets(new->person,MAX_SIZE,stdin);
+    return;
+    /*
     while(1){
         if(previous->task->id == targetTaskId){
+            char c;
+            while((c = getchar()) != '\n' && c != EOF);
+            previous->task->person=(char *)malloc(50*sizeof(char));
             fgets(previous->task->person,MAX_SIZE,stdin);
             return;
         }
         else if(current->task->id == targetTaskId){
+            char c;
+            while((c = getchar()) != '\n' && c != EOF);
+            current->task->person=(char *)malloc(50*sizeof(char));
             fgets(current->task->person,MAX_SIZE,stdin);
             return;
         }
         previous = current;
         current = current->next;
     }
-    return;
+    return;*/
 }
 
 

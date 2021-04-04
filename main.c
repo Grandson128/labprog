@@ -63,6 +63,20 @@ void menu(int option){
             }
             break;
         case 5:
+            //doing para todo
+            clearScreen();
+            if(emptyTaskList(doingList) == 0){
+                printTaskList(doingList);
+                printf("Insert the task ID you want to transfer to ToDo\n\n   => ");
+                scanf("%d", &taskId);
+                assignDoingTodo(todoList, doingList, taskId);
+            }
+            else {
+                printf("Lista vazia\n\nNo Tasks on the To Do list\nReturning to main menu...\n");
+                sleep(3);
+            }
+            break;
+        case 6:
             //doing para done
             clearScreen();
             if (emptyTaskList(doingList) == 0){
@@ -76,21 +90,28 @@ void menu(int option){
                 sleep(3);
             }
             break;
-        case 6:
+        case 7:
             clearScreen();
             printTaskList(doingList);
             if(doingList->next != NULL){
                 printf("Insert the task ID you want to change admin\n\n   => ");
                 scanf("%d", &taskId);
-                if(taskIn(doingList,taskId) == 1){
-                    changePerson(creationDateList, taskId);
-                    printf("Admin changed\nReturning to main menu...\n");
-                }
-                else{
-                    printf("No tasks on the Doing list\nReturning to main menu...\n");
+                while(1){
+                    if(taskIn(doingList,taskId) == 1){
+                        changePerson(creationDateList, taskId);
+                        printf("\nAdmin changed\nReturning to main menu...\n");
+                        break;
+                    }
+                    else{
+                        printf("\nNo task with that ID, try again\n   => ");
+                        scanf("%d", &taskId);
+                    }
                 }
             }
-            sleep(100);
+            else{
+                printf("No tasks on the Doing list\nReturning to main menu...\n");
+            }
+            sleep(3);
             break;
         case 10:
             clearScreen();
@@ -140,7 +161,7 @@ int main(){
 
         printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
 
-        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Task\n5) End Task\n6) Change Doing task admin\n10) List Todo\n11) List Doing\n12) List Done\n\n0) Exit\n\n   => ");
+        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n10) List To Do\n11) List Doing\n12) List Done\n\n0) Exit\n\n   => ");
 
         scanf("%d", &option);
         getchar();
