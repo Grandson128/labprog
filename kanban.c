@@ -89,7 +89,7 @@ void printTaskList (Tasklist list){
     if(list->next != NULL)
         l = list->next; /* Salta o header */
     else{
-        printf("Lista vazia\n"); 
+        printf("Lista vazia\n\n");
         return;
     }
 
@@ -98,7 +98,9 @@ void printTaskList (Tasklist list){
         printf("Task ID: %d {\n", l->task->id);
         printf("    Description: %s", l->task->description);
         printf("    Priority: %d \n", l->task->priority);
-        printf("    Assigned to: %s", l->task->person);
+        if(l->task->person != NULL){
+            printf("    Assigned to: %s", l->task->person);
+        }
         printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
 
@@ -119,7 +121,7 @@ void printTaskList (Tasklist list){
 
 Task *createTask(void){
 
-    
+
     int ID=TASKS_ID++;
 
     Task *new = (Task *)malloc(sizeof(Task));
@@ -132,29 +134,39 @@ Task *createTask(void){
 
     printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
-    if( new->priority<=0 || new->priority >=11 ){
-        printf("\nPlease insert a valid number between 1 and 10\n");
-        scanf("%d",&new->priority);
+    while(1){
+        if( new->priority<=0 || new->priority >=11 ){
+            printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
+            scanf("%d",&new->priority);
+        }
+        else{
+            break;
+        }
     }
 
     printf("\nWhen will the task start?\n");
     new->creationDate=setDate();
-    if(validateDate(new->creationDate)==1){
-        printf("Given date was not valid\n");
-        new->creationDate=setDate();
+    while(1){
+        if(validateDate(new->creationDate)==1){
+            printf("Given date was not valid\n");
+            new->creationDate=setDate();
+        }
+        else{
+            break;
+        }
     }
 
     printf("\nWhen do you plan to finish the task?\n");
     new->targetDate=setDate();
-    if(validateDate(new->targetDate)==1){
-        printf("Given date was not valid\n");
-        new->targetDate=setDate();
+    while(1){
+        if(validateDate(new->targetDate)==1){
+            printf("Given date was not valid\n");
+            new->targetDate=setDate();
+        }
+        else{
+            break;
+        }
     }
-
-    //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
-    printf("\nWho will be in charge?\n\n   => ");
-    new->person=(char *)malloc(MAX_SIZE*sizeof(char));
-    fgets(new->person,MAX_SIZE,stdin);
 
     new->finalDate=NULL;
 
@@ -186,28 +198,28 @@ Task *searchTask(Tasklist list, int task){
         current = NULL; /* Se elemento não encontrado*/
         return NULL;
     }
-    
+
     return current->task;
 }
 
 /**
  * Function to check if a task is in a given list
- * 
+ *
  * @list - List with task's
  * @targetTaskId - Task identifier
- * 
+ *
  * Return:
  * 1 - Task found in list
  * 0 - Task not found
 */
-int taskIn(Tasklist list, int targetTaskId){  
+int taskIn(Tasklist list, int targetTaskId){
     Tasklist current  = list->next;
     Tasklist previous = list;
-    
+
     if (current != NULL && current->task->id == targetTaskId){
         return 1;
     }
-    
+
     while(current->next != NULL && current->task->id != targetTaskId){
         previous = current;
         current = current->next;
@@ -216,7 +228,7 @@ int taskIn(Tasklist list, int targetTaskId){
     if(current != NULL && current->task != NULL && current->task->id == targetTaskId){
         return 1;
     }else{
-        return 0; 
+        return 0;
     }
 
 }
@@ -340,7 +352,7 @@ void insertDoingTask (Tasklist list, Task *task){
         list->next = new;
         return;
     }
-    
+
     while(strcmp(task->person, current->task->person) > 0 && current->next != NULL){
         previous = current;
         current = current->next;
@@ -349,7 +361,8 @@ void insertDoingTask (Tasklist list, Task *task){
     if(strcmp(task->person, current->task->person) < 0){
         previous->next = new;
         new->next = current;
-    }else{
+    }
+    else {
         new->next = current->next;
         current->next = new;
     }
@@ -366,10 +379,10 @@ void insertDoneTask (Tasklist list, Task *task){
     Tasklist current = list->next;
     Tasklist new = (Tasklist)malloc(sizeof(Node));
 
-    printf("\n Task final date?\n");
+    printf("\nTask final date?\n");
     task->finalDate=setDate();
     if(validateDate(task->finalDate)==1){
-        printf("\n Given date was not valid \n");
+        printf("\nGiven date was not valid\n");
         task->finalDate=setDate();
     }
 
@@ -411,7 +424,6 @@ void insertDoneTask (Tasklist list, Task *task){
  * @targetTaskId - task identifier
  **/
 void deleteTask(Tasklist list, int targetTaskId){
-
     Tasklist current  = list->next;
     Tasklist previous = list;
 
@@ -456,60 +468,71 @@ void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist do
  * Function to "pause" the program until user input
  *  2 getchat used because only 1 was beeing ignored
 */
-void mypause ( void ) { 
-  printf ( "Press [Enter] to continue . . .\n");
+void mypause ( void ) {
+  printf ( "Press ENTER to continue...\n");
   fflush (NULL);
   getchar();
-  getchar();
-} 
+}
 
 /**
  * Function to assign a task from todo list to the doing list
- * 
+ *
  * @todolist - List with Todo tasks
  * @doinglist - List with Doing tasks
  * @taskId - Task identifier
- * 
+ *
 */
 void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
     if (taskIn(todoList, taskId) == 1){
 
         if(doingList->info >= MAX_DOING_TASKS){
-            printf("Número máximo de tarefas atingido\n");
+            printf("Max number of tasks reached\n");
             mypause();
             return;
         }
 
-        insertDoingTask(doingList, searchTask(todoList, taskId));
-        printf("\e[1;1H\e[2J");
+        Task *new = searchTask(todoList,taskId);
+
+        char c;
+        while((c = getchar()) != '\n' && c != EOF); //limpa o stdin para o fgets funcionar. o fflush nao estava a funcionar
+        
+        //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
+        printf("\nWho will be in charge?\n\n   => ");
+        new->person=(char *)malloc(50*sizeof(char));
+        fgets(new->person,50,stdin);
+
+        insertDoingTask(doingList, new);
+        clearScreen();
         //printTaskList(doingList);
         deleteTask(todoList, taskId);
-        printf("Tarefa iniciada\n");
+        printf("Task iniciated\n\n");
 
-    }else{
-        printf("Tarefa inválida, tente novamente\n");
+    }
+    else {
+        printf("Invalid task, try again\n");
     }
     mypause();
 }
 
 /**
  * Function to assign a task from doing list to the done list
- * 
+ *
  * @todolist - List with Doing tasks
  * @doinglist - List with Done tasks
  * @taskId - Task identifier
- * 
+ *
 */
 void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
     if (taskIn(doingList, taskId) == 1){
         insertDoneTask(doneList, searchTask(doingList, taskId));
-        printf("\e[1;1H\e[2J");
+        clearScreen();
         //printTaskList(doneList);
         deleteTask(doingList, taskId);
-        printf("Tarefa terminada\n");
+        printf("Task terminated\n");
 
-    }else{
-        printf("Tarefa inválida, tente novamente\n");
+    }
+    else {
+        printf("Invalid task, try again\n");
     }
 
     mypause();
@@ -628,9 +651,24 @@ int compareDate(Date *date1, Date *date2){
 /*******************************************************/
 
 
-void changePerson(Task *task){
+void changePerson(Tasklist list, int targetTaskId){
+
+    Tasklist current  = list->next;
+    Tasklist previous = list;
     printf("Insert new admin name for this task\n   => ");
-    fgets(task->person,MAX_SIZE,stdin);
+    while(1){
+        if(previous->task->id == targetTaskId){
+            fgets(previous->task->person,MAX_SIZE,stdin);
+            return;
+        }
+        else if(current->task->id == targetTaskId){
+            fgets(current->task->person,MAX_SIZE,stdin);
+            return;
+        }
+        previous = current;
+        current = current->next;
+    }
+    return;
 }
 
 
