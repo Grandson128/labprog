@@ -105,7 +105,7 @@ void printTaskList (Tasklist list){
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
 
         if(l->task->finalDate != NULL)
-            printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+            printf("    Final Date: %d/%d/%d \n", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
 
         l=l->next;
         printf("}\n\n");
@@ -132,12 +132,17 @@ Task *createTask(void){
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->description,MAX_SIZE,stdin);
 
+    new->description[strcspn(new->description, "\n")] = 0; //deleta o \n do stdin
+
+
+
     printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
     while(1){
         if( new->priority<=0 || new->priority >=11 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
             scanf("%d",&new->priority);
+            getchar();
         }
         else{
             break;
@@ -168,7 +173,7 @@ Task *createTask(void){
         }
     }
 
-    new->finalDate=NULL;
+   new->finalDate=NULL;
 
     return new;
 
@@ -727,7 +732,7 @@ void tasksByPerson(Tasklist list, const char *name){
             printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
             printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
             if(l->task->finalDate != NULL)
-                printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+                printf("    Final Date: %d/%d/%d \n", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
             l=l->next;
             printf("}\n\n");
         }
@@ -866,19 +871,33 @@ void saveInFile(const char *filename, Tasklist list){
 
     //creationDateList
     Tasklist l = list->next; /* Salta o header */
-    while (l){
-        fprintf(file,"Task ID: %d {\n", l->task->id);
-        fprintf(file,"    Description: %s", l->task->description);
-        fprintf(file,"    Priority: %d \n", l->task->priority);
-        fprintf(file,"    Assigned to: %s", l->task->person);
-        fprintf(file,"    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
-        fprintf(file,"    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
 
-        if(l->task->finalDate != NULL)
-            fprintf(file,"    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+    fprintf(file,"%d", l->info); //nao actualiza
+    fprintf(file,";%d", l->lastID); //nao actualiza
+    fprintf(file,";\n");
+
+    while (l){
+        fprintf(file,"%d", l->task->id);
+        fprintf(file,";%s", l->task->description);
+        fprintf(file,";%d", l->task->priority);
+
+         if(l->task->finalDate != NULL) {
+            fprintf(file,";%s", l->task->person);
+        }
+        else 
+            fprintf(file,";");
+
+        fprintf(file,";%d/%d/%d", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+        fprintf(file,";%d/%d/%d", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
+
+         if(l->task->finalDate != NULL) {
+            fprintf(file,";%d/%d/%d", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
+        }
+        else
+            fprintf(file,";");
 
         l=l->next;
-        fprintf(file,"}\n\n");
+        fprintf(file,";\n");
     }
 
     fclose(file);
