@@ -1028,28 +1028,48 @@ const char* getDataField(char* line, int num)
 void fileToTasks(const char *filename,Tasklist list){
     FILE* file = fopen("data", "r");
 
+/*
     Tasklist l = createTaskList();
+
     char header[50];
     char* tmp =strdup(header);
     l->info=getDataField(tmp,1);
     l->lastID=getDataField(tmp,2);
-    free(tmp);
+    free(tmp);*/
+
 
     char line[1024];
-    Task *new = (Task *)malloc(sizeof(Task));
+  //  Task *new = (Task *)malloc(sizeof(Task));
     
-    for(int i=0;i<(l->info);i++){
+    while (fgets(line, 1024, file)){
+        Task *new = (Task *)malloc(sizeof(Task));
         char* tmp = strdup(line);
+
         new->id=getDataField(tmp,1);
         new->description=getDataField(tmp,2);
         new->priority=getDataField(tmp,3);
         new->person=getDataField(tmp,4);
-        new->creationDate=getDataField(tmp,5);
-        new->targetDate=getDataField(tmp,6);
-        new->finalDate=getDataField(tmp,7);
+
+        new->creationDate->day=getDataField(tmp,5);
+        new->creationDate->month=getDataField(tmp,6);
+        new->creationDate->year=getDataField(tmp,7);
+
+        new->targetDate->day=getDataField(tmp,8);
+        new->targetDate->month=getDataField(tmp,9);
+        new->targetDate->year=getDataField(tmp,10);
+
+        new->targetDate->day=getDataField(tmp,11);
+        new->targetDate->month=getDataField(tmp,12);
+        new->targetDate->year=getDataField(tmp,13);
+
+        insertTask(list, new);
+        //  insertTodoTask(list, new);
+        //printTaskList(list);
+
         free(tmp);
     }
-
+   //  printTaskList(list);
+        fclose(file);
 }
 
 /**
@@ -1070,10 +1090,11 @@ void saveInFile(const char *filename, Tasklist list){
     FILE *file;
     file = fopen(filename, "w");
 
+    /*
     fprintf(file,"%d", list->info); 
     fprintf(file,";%d", list->lastID); 
     fprintf(file,";\n");
-
+    */
     //creationDateList
 
     if(list->next == NULL){
@@ -1094,11 +1115,19 @@ void saveInFile(const char *filename, Tasklist list){
         else 
             fprintf(file,";");
 
-        fprintf(file,";%d/%d/%d", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
-        fprintf(file,";%d/%d/%d", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
+        fprintf(file,";%d", l->task->creationDate->day);
+        fprintf(file,";%d", l->task->creationDate->month);
+        fprintf(file,";%d", l->task->creationDate->year);
+
+        fprintf(file,";%d", l->task->targetDate->day);
+        fprintf(file,";%d", l->task->targetDate->month);
+        fprintf(file,";%d", l->task->targetDate->year);
+
 
          if(l->task->finalDate != NULL) {
-            fprintf(file,";%d/%d/%d", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
+              fprintf(file,";%d", l->task->finalDate->day);
+            fprintf(file,";%d", l->task->finalDate->month);
+            fprintf(file,";%d", l->task->finalDate->year);
         }
         else
             fprintf(file,";");
