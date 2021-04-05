@@ -89,7 +89,7 @@ void printTaskList (Tasklist list){
     if(list->next != NULL)
         l = list->next; /* Salta o header */
     else{
-        printf("Lista vazia\n\n");
+        printf("Empty list\n\n");
         return;
     }
 
@@ -195,7 +195,8 @@ Task *searchTask(Tasklist list, int task){
     //free(previous);
 
     if ((current) != NULL && (current)->task->id != targetValue){
-        current = NULL; /* Se elemento não encontrado*/
+        current = NULL; 
+        /* Se elemento não encontrado*/
         return NULL;
     }
 
@@ -213,6 +214,7 @@ Task *searchTask(Tasklist list, int task){
  * 0 - Task not found
 */
 int taskIn(Tasklist list, int targetTaskId){
+
     Tasklist current  = list->next;
     Tasklist previous = list;
 
@@ -230,6 +232,7 @@ int taskIn(Tasklist list, int targetTaskId){
     }else{
         return 0;
     }
+
 
 }
 
@@ -505,11 +508,12 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
         clearScreen();
         //printTaskList(doingList);
         deleteTask(todoList, taskId);
-        printf("Task iniciated\n\n");
+        printf("Task initiated\n\n");
 
     }
     else {
-        printf("Invalid task, try again\n");
+        printf("Given ID was not valid,returning to option menu\n");
+        sleep(2);
     }
     mypause();
 }
@@ -530,7 +534,8 @@ void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
 
     }
     else {
-        printf("Invalid task, try again\n");
+        printf("Given ID was not valid,returning to option menu\n");
+        sleep(2);
     }
     mypause();
 }
@@ -553,7 +558,8 @@ void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
 
     }
     else {
-        printf("Invalid task, try again\n");
+        printf("Given ID was not valid,returning to option menu\n");
+        sleep(2);
     }
 
     mypause();
@@ -702,6 +708,36 @@ void changePerson(Tasklist list, int targetTaskId){
     return;*/
 }
 
+void tasksByPerson(Tasklist list, const char *name){
+
+    Tasklist l = createTaskList();
+     if(list->next != NULL)
+        l = list->next; /* Salta o header */
+    else{
+        printf("Currently empty list\n");
+        return;
+    }
+
+    while( l != NULL){
+
+        if(strcmp(name,l->task->person)) {
+            printf("Task ID: %d {\n", l->task->id);
+            printf("    Priority: %d \n", l->task->priority);
+            printf("    Assigned to: %s", l->task->person);
+            printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+            printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
+            if(l->task->finalDate != NULL)
+                printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+            l=l->next;
+            printf("}\n\n");
+        }
+        else {
+        printf("%s has no tasks in this fase\n", name);
+        }
+
+    }
+
+}
 
 /*******************************************************/
 /************************ FILES ************************/

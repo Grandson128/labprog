@@ -10,10 +10,18 @@ Tasklist doingList;
 Tasklist doneList;
 Tasklist creationDateList;
 int taskId;
+char name[20];
+
+
+void banner(){
+
+    printf("|__/  /\\  |\\ | |__)  /\\  |\\ |    |__) /  \\  /\\  |__) |  \\\n");
+    printf("|  \\ /~~\\ | \\| |__) /~~\\ | \\|    |__) \\__/ /~~\\ |  \\ |__/\n\n"); 
+}
 
 void menu(int option){
     switch (option){
-        case 1:
+        case 1: //CRIAR TAREFA
             newTask = createTask();
             insertTask(creationDateList, newTask);
             insertTodoTask(todoList, newTask);
@@ -23,7 +31,7 @@ void menu(int option){
             getchar();
             break;
 
-        case 2:
+        case 2: //APAGAR TAREFA
             clearScreen();
             printTaskList(creationDateList);
             if(creationDateList->next != NULL){
@@ -42,14 +50,13 @@ void menu(int option){
             }
             break;
 
-        case 3:
+        case 3: //LISTAR TAREFAS
             clearScreen();
             printTaskList(creationDateList);
             printf("Press ENTER to proceed\n");
             getchar();
             break;
-        case 4:
-            //todo para doing
+        case 4: //ToDo para DOING
             clearScreen();
             if (emptyTaskList(todoList) == 0){
                 printTaskList(todoList);
@@ -58,12 +65,11 @@ void menu(int option){
                 assignTodoDoing(todoList, doingList, taskId);
             }
             else {
-                printf("Lista vazia\n\nNo tasks on the To Do list\nReturning to main menu...\n");
+                printf("Empty list\n\nNo tasks on the To Do list\nReturning to main menu...\n");
                 sleep(3);
             }
             break;
-        case 5:
-            //doing para todo
+        case 5: //DOING para ToDO
             clearScreen();
             if(emptyTaskList(doingList) == 0){
                 printTaskList(doingList);
@@ -72,12 +78,11 @@ void menu(int option){
                 assignDoingTodo(todoList, doingList, taskId);
             }
             else {
-                printf("Lista vazia\n\nNo Tasks on the To Do list\nReturning to main menu...\n");
+                printf("Empty list\n\nNo Tasks on the To Do list\nReturning to main menu...\n");
                 sleep(3);
             }
             break;
-        case 6:
-            //doing para done
+        case 6: //DOING para DONE
             clearScreen();
             if (emptyTaskList(doingList) == 0){
                 printTaskList(doingList);
@@ -86,11 +91,11 @@ void menu(int option){
                 assignDoingDone(doingList, doneList, taskId);
             }
             else {
-                printf("Lista vazia\n\nNo tasks on the Doing list\nReturning to main menu...\n");
+                printf("Empty list\n\nNo tasks on the Doing list\nReturning to main menu...\n");
                 sleep(3);
             }
             break;
-        case 7:
+        case 7: //CHANGE ADMIN
             clearScreen();
             printTaskList(doingList);
             if(doingList->next != NULL){
@@ -113,19 +118,40 @@ void menu(int option){
             }
             sleep(3);
             break;
-        case 10:
+         case 9: //Visualizar todas as tarefas de uma pessoa. 
+            clearScreen();
+            /*
+             if(creationDateList->next == NULL){
+                printf("No tasks to display \nReturning to main menu...\n");
+                sleep(3);
+            }
+             else{*/
+                printf("Insert the admin you want to search\n\n   => ");
+                scanf("%s", name);
+                getchar();
+                //tasksByName(todoList,name); não tem pessoa atribuída ho? porque pedir visualizar por fase do pipeline
+                printf("------------- DOING LIST ------------\n");
+                tasksByPerson(doingList,name);
+                printf("------------- DONE LIST ------------\n");
+                tasksByPerson(doneList,name);
+
+            //sleep(3);
+            printf("Press ENTER to proceed\n");
+            getchar();
+            break;
+        case 10: //Listar ToDO
             clearScreen();
             printTaskList(todoList);
             printf("Press ENTER to proceed\n");
             getchar();
             break;
-        case 11:
+        case 11: //Listar DOING
             clearScreen();
             printTaskList(doingList);
             printf("Press ENTER to proceed\n");
             getchar();
             break;
-        case 12:
+        case 12: //Listar DONE
             clearScreen();
             printTaskList(doneList);
             printf("Press ENTER to proceed\n");
@@ -157,11 +183,12 @@ int main(){
 
     while (option != 0){
         clearScreen();
-        printf("O nosso projeto em C para Laboratorio de Programacao\n");
+
+        banner();
 
         printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
 
-        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n10) List To Do\n11) List Doing\n12) List Done\n\n0) Exit\n\n   => ");
+        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n9) Search all tasks by admin\n10) List To Do\n11) List Doing\n12) List Done\n\n0) Exit\n\n   => ");
 
         scanf("%d", &option);
         getchar();
