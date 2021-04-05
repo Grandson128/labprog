@@ -1012,7 +1012,46 @@ Task readFiles(const char *filename, int contagem, int flag){
 }
 */
 
+const char* getDataField(char* line, int num)
+{
+    const char* token;
+    for (token = strtok(line, ";");
+            token && *token;
+            token = strtok(NULL, ";\n"))
+    {
+        if (!--num)
+            return token;
+    }
+    return NULL;
+}
 
+void fileToTasks(const char *filename,Tasklist list)
+{
+    FILE* file = fopen("data", "r");
+
+    Tasklist l = createTaskList();
+    char header[50];
+    char* tmp =strdup(header);
+    l->info=getDataField(tmp,1);
+    l->lastID=getDataField(tmp,2);
+    free(tmp);
+
+    char line[1024];
+    Task *new = (Task *)malloc(sizeof(Task));
+    
+    for(int i=0;i<(l->info);i++){
+        char* tmp = strdup(line);
+        new->id=getDataField(tmp,1);
+        new->description=getDataField(tmp,2);
+        new->priority=getDataField(tmp,3);
+        new->person=getDataField(tmp,4);
+        new->creationDate=getDataField(tmp,5);
+        new->targetDate=getDataField(tmp,6);
+        new->finalDate=getDataField(tmp,7);
+        free(tmp);
+    }
+
+}
 
 /**
  * 
