@@ -197,8 +197,8 @@ void storeLists(){
 }
 
 void generateEmptyFiles(){
-    if(!(FileExists("data"))){
-        CreateFile("data");
+    if(!(FileExists("creation"))){
+        CreateFile("creation");
     }
     if(!(FileExists("todo"))){
         CreateFile("todo");
