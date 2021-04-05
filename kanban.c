@@ -338,8 +338,13 @@ void insertTask(Tasklist list, Task *task){
 
     new->task = task;
     new->info = 0;
+
+    printf("Antes do assign: %d %d\n", list->info, list->lastID);
+
     list-> info++;
     list->lastID = task->id;
+
+    printf("Depois do assign: %d %d\n", list->info, list->lastID);
 
     if(task!=NULL && current == NULL){
         new->next = current;
@@ -973,8 +978,6 @@ Task readFiles(const char *filename, int contagem, int flag){
 }
 */
 
-
-
 const char* getDataField(char* line, int num)
 {
     const char* token;
@@ -1016,17 +1019,26 @@ void fileToTasks(const char *filename,Tasklist list)
 
 }
 
-// ID      DESCRIPTION    PRIORITY PERSON CREATIONDATE TARGETDATE FINALDATE    
+/**
+ * 
+ * Saves list in file
+ * SAVE FORMAT:
+ * ****list info:
+ * [nº tasks];[last task identifier];
+ * ****tasks:
+ * [id];[description];[priority];[person];[creation day];[creation month];[creation year];[target day];[target month];[target year];[final day];[final month];[final year]
+ * 
+*/
 void saveInFile(const char *filename, Tasklist list){
     FILE *file;
     file = fopen(filename, "w");
 
+    fprintf(file,"%d", list->info); 
+    fprintf(file,";%d", list->lastID); 
+    fprintf(file,";\n");
+
     //creationDateList
     Tasklist l = list->next; /* Salta o header */
-
-    fprintf(file,"%d", l->info); //nao actualiza
-    fprintf(file,";%d", l->lastID); //nao actualiza
-    fprintf(file,";\n");
 
     while (l){
         fprintf(file,"%d", l->task->id);
