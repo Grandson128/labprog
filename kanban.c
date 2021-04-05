@@ -113,6 +113,11 @@ void printTaskList (Tasklist list){
 
 }
 
+/**
+ * 
+ * Print all lists
+ * 
+*/
 void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
 
     /**
@@ -338,13 +343,8 @@ void insertTask(Tasklist list, Task *task){
 
     new->task = task;
     new->info = 0;
-
-    printf("Antes do assign: %d %d\n", list->info, list->lastID);
-
     list-> info++;
     list->lastID = task->id;
-
-    printf("Depois do assign: %d %d\n", list->info, list->lastID);
 
     if(task!=NULL && current == NULL){
         new->next = current;
@@ -368,6 +368,9 @@ void insertTask(Tasklist list, Task *task){
             current->next = new;
         }
     }
+
+    //update File
+    saveInFile("creation", list);
 }
 
 /**
@@ -424,6 +427,9 @@ void insertTodoTask (Tasklist list, Task *task){
 
     }
 
+    //update File
+    saveInFile("todo", list);
+
 }
 
 /**
@@ -463,6 +469,9 @@ void insertDoingTask (Tasklist list, Task *task){
         new->next = current->next;
         current->next = new;
     }
+
+    //update Files
+    saveInFile("doing", list);
 }
 
 /**
@@ -511,7 +520,8 @@ void insertDoneTask (Tasklist list, Task *task){
         }
     }
 
-
+    //update Files
+    saveInFile("done", list);
 }
 
 /**
@@ -602,6 +612,10 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
         clearScreen();
         //printTaskList(doingList);
         deleteTask(todoList, taskId);
+
+        //remove from file
+        if(emptyTaskList(todoList) != 1) saveInFile("todo", todoList); else clearFile("todo");
+
         printf("Task initiated\n\n");
 
     }
@@ -612,6 +626,14 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
     mypause();
 }
 
+/**
+ Function to assign a task from doing list to the todo list
+ *
+ * @todolist - List with Todo tasks
+ * @doinglist - List with Doing tasks
+ * @taskId - Task identifier
+ * 
+*/
 void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
     if (taskIn(doingList, taskId) == 1){
         Task *new = searchTask(doingList,taskId);
@@ -624,6 +646,10 @@ void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
         insertTodoTask(todoList,new);
         clearScreen();
         deleteTask(doingList,taskId);
+
+        //remove from file
+        if(emptyTaskList(doingList) != 1) saveInFile("doing", doingList); else clearFile("doing");
+
         printf("Task moved to To Do\n\n");
 
     }
@@ -634,6 +660,13 @@ void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
     mypause();
 }
 
+/**
+ * Function to assign a task from done list to the todo list
+ *
+ * @donelist - List with Done tasks
+ * @todolist - List with Todo tasks
+ * @taskId - Task identifier
+*/
 void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId){
 
     if (taskIn(doneList, taskId) == 1){
@@ -648,6 +681,10 @@ void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId){
         insertTodoTask(todoList,new);
         clearScreen();
         deleteTask(doneList,taskId);
+
+        //remove from file
+        if(emptyTaskList(doneList) != 1) saveInFile("doing", doneList); else clearFile("done");
+
         printf("Task moved to To Do\n\n");
 
     }
@@ -672,6 +709,10 @@ void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
         clearScreen();
         //printTaskList(doneList);
         deleteTask(doingList, taskId);
+
+        //remove from file
+        if(emptyTaskList(doingList) != 1) saveInFile("doing", doingList); else clearFile("doing");
+
         printf("Task terminated\n");
 
     }
@@ -868,41 +909,34 @@ void tasksByPerson(Tasklist list, const char *name){
  * return 1 if the file exist otherwise return 0
  */
 int FileExists(const char *filename){
-
     /* try to open file to read */
     FILE *file;
-
-
     if (file = fopen(filename, "r")){
         fclose(file);
         return 1;
     }
-
     return 0;
 }
 
+/**
+ * Function that creates a file if the file doesn't exist, if it does exist, does nothing
+*/
 void CreateFile(const char *filename) {
-
     FILE *file;
     /*
      * Open file in w (write) mode.
      * "data/file1.txt" is complete path to create file
      */
     file = fopen(filename, "w");
-
     /* fopen() return NULL if last operation was unsuccessful */
     if(file == NULL)
     {
         /* File not created hence exit */
-        printf("Unable to create file.\n");
+        printf("Unable to create %s file.\n", filename);
         exit(EXIT_FAILURE);
     }
-
-    printf("File created and saved successfully. \n");
-
+    //printf("File %s created and saved successfully. \n", filename);
     fclose(file);
-
-
 }
 
 
@@ -1093,5 +1127,14 @@ void saveInFile(const char *filename, Tasklist list){
         fprintf(file,";\n");
     }
 
+    fclose(file);
+}
+
+/**
+ * Function that deletes all the content of a file
+*/
+void clearFile(const char *filename){
+    FILE *file;
+    file = fopen(filename, "w");
     fclose(file);
 }

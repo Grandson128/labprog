@@ -38,9 +38,10 @@ void menu(int option){
                 printf("Insert the Task ID you wish to delete\n\n   => ");
                 scanf("%d", &taskId);
                 deleteTask(creationDateList, taskId);
-                if (taskIn(todoList, taskId) == 1 ) deleteTask(todoList, taskId);
-                if (taskIn(doingList, taskId) == 1 ) deleteTask(doingList, taskId);
-                if (taskIn(doneList, taskId) == 1 ) deleteTask(doneList, taskId);
+                if(emptyTaskList(creationDateList) != 1) saveInFile("creation", creationDateList);  else clearFile("creation");
+                if (taskIn(todoList, taskId) == 1 ) {deleteTask(todoList, taskId);  if(emptyTaskList(todoList) != 1) saveInFile("todo", todoList); else clearFile("todo");}
+                if (taskIn(doingList, taskId) == 1 ) {deleteTask(doingList, taskId); if(emptyTaskList(doingList) != 1) saveInFile("doing", doingList); else clearFile("doing");}
+                if (taskIn(doneList, taskId) == 1 ) {deleteTask(doneList, taskId); if(emptyTaskList(doneList) != 1) saveInFile("done", doneList); else clearFile("done");}
                 printf("\nTask Eliminated\nReturning to main menu...\n");
                 sleep(3);
             }
@@ -185,6 +186,31 @@ void menu(int option){
     }
 }
 
+void storeLists(){
+    if(emptyTaskList(creationDateList) != 1)saveInFile("creation", creationDateList);
+    if(emptyTaskList(todoList) != 1)saveInFile("todo", todoList);
+    if(emptyTaskList(doingList) != 1)saveInFile("doing", doingList);
+    if(emptyTaskList(doneList) != 1)saveInFile("done", doneList);
+
+    printf("\nFiles saved, exiting...\n");
+    sleep(2);
+}
+
+void generateEmptyFiles(){
+    if(!(FileExists("creation"))){
+        CreateFile("creation");
+    }
+    if(!(FileExists("todo"))){
+        CreateFile("todo");
+    }
+    if(!(FileExists("doing"))){
+        CreateFile("doing");
+    }
+    if(!(FileExists("done"))){
+        CreateFile("done");
+    }
+}
+
 int main(){
     int option;
     int flag=0;
@@ -194,13 +220,7 @@ int main(){
     doingList = createTaskList();
     doneList = createTaskList();
 
-    if(!(FileExists("data"))){
-        CreateFile("data");
-    }
-    /*
-    else {
-        fileToTasks("data",creationDateList);
-    }*/
+    generateEmptyFiles();
 
     /*while(flag==0){
         Task *new = readFiles("data",contagem,flag);
@@ -223,8 +243,7 @@ int main(){
         menu(option);
     }
 
-    saveInFile("data", creationDateList);
-
+    storeLists();
     clearScreen();
     return 0;
 }
