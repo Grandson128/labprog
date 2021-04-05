@@ -105,7 +105,7 @@ void printTaskList (Tasklist list){
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
 
         if(l->task->finalDate != NULL)
-            printf("    Final Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
+            printf("    Final Date: %d/%d/%d \n", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
 
         l=l->next;
         printf("}\n\n");
@@ -113,7 +113,89 @@ void printTaskList (Tasklist list){
 
 }
 
+void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
 
+    /**
+     * 
+     * Lado a Lado
+     * 
+    */
+
+    // Tasklist todo = createTaskList();
+    // Tasklist doing = createTaskList();
+    // Tasklist done = createTaskList();
+    // if(todoList->next != NULL ){todo=todoList->next;}else{todo = NULL;}
+    // if(doingList->next != NULL ){doing=doingList->next;}else{doing = NULL;}
+    // if(doneList->next != NULL ){done=doneList->next;}else{done = NULL;}
+    
+    
+    // printf("TODO%6s   |%6sDOING%6s|%6sDONE\n","","","","");
+    // while (todo != NULL || doing != NULL || done != NULL){
+        
+    //     /*ID*/
+    //     if(todo==NULL) printf("%6s",""); else printf("ID:%6d", todo->task->id);
+    //     if(doing==NULL) printf("    |%6s%6s     |","",""); else printf("| ID:%6d |", doing->task->id);
+    //     if(done==NULL) printf("%6s\n",""); else printf("ID:%6d\n", done->task->id);
+
+        
+
+    //     /*Description*/
+    //     // if(todo==NULL) printf(""); else printf("Descp:%6s", todo->task->description);
+    //     // if(doing==NULL) printf(""); else printf("|Descp:%6s|", doing->task->description);
+    //     // if(done==NULL) printf("\n"); else printf("Descp:%6s\n", done->task->description);
+
+    //     /*Priority*/
+    //     if(todo==NULL) printf("%s",""); else printf("Priority:%d", todo->task->priority);
+    //     if(doing==NULL) printf("   |%6s%6s     |","",""); else printf("|Priority:%d|", doing->task->priority);
+    //     if(done==NULL) printf("\n"); else printf("Priority:%d\n", done->task->priority);
+
+    //     /*Person*/
+    //     if(todo==NULL) printf("%s",""); else if(todo->task->person != NULL) printf("Person:%6s", todo->task->person); else printf("%s",""); 
+    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->person != NULL) printf("|Person:%6s|", doing->task->person); else printf("%s",""); 
+    //     if(done==NULL) printf("\n"); else if(done->task->person != NULL) printf("Person:%6s\n", done->task->person); else printf("\n"); 
+
+    //     /*Creation Date*/
+    //     if(todo==NULL) printf("%s",""); else printf("C: %d/%d/%d", todo->task->creationDate->day, todo->task->creationDate->month, todo->task->creationDate->year);
+    //     if(doing==NULL) printf("|%6s%6s     |","",""); else printf("|C: %d/%d/%d|", doing->task->creationDate->day, doing->task->creationDate->month, doing->task->creationDate->year);
+    //     if(done==NULL) printf("\n"); else printf("C: %d/%d/%d\n", done->task->creationDate->day, done->task->creationDate->month, done->task->creationDate->year);
+
+    //     /*Goal Date*/
+    //     if(todo==NULL) printf("%s",""); else printf("G: %d/%d/%d", todo->task->targetDate->day, todo->task->targetDate->month, todo->task->targetDate->year);
+    //     if(doing==NULL) printf("|%6s%6s     |","",""); else printf("|G: %d/%d/%d |", doing->task->targetDate->day, doing->task->targetDate->month, doing->task->targetDate->year);
+    //     if(done==NULL) printf("\n"); else printf("G: %d/%d/%d \n", done->task->targetDate->day, done->task->targetDate->month, done->task->targetDate->year);
+
+    //     /*Final Date*/
+    //     if(todo==NULL) printf("%s",""); else if(todo->task->finalDate != NULL) printf("F: %d/%d/%d", todo->task->finalDate->day, todo->task->finalDate->month, todo->task->finalDate->year); else printf("%s",""); 
+    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->finalDate != NULL) printf("|F: %d/%d/%d |", doing->task->finalDate->day, doing->task->finalDate->month, doing->task->finalDate->year); else printf("%6s%6s |%6s%6s     |","","","",""); 
+    //     if(done==NULL) printf("\n"); else if(done->task->finalDate != NULL) printf("F: %d/%d/%d \n", done->task->finalDate->day, done->task->finalDate->month, done->task->finalDate->year); else printf("%s\n",""); 
+
+    //     printf("<========>\n");
+
+    //     if(todo!=NULL && todo->next != NULL && todo->next->task != NULL ){todo=todo->next;}else{todo = NULL;}
+    //     if(doing!=NULL && doing->next != NULL && doing->next->task != NULL ){doing=doing->next;}else{doing = NULL;}
+    //     if(done!=NULL && done->next != NULL && done->next->task != NULL ){done=done->next;}else{done = NULL;}
+
+    // }
+    // printf("\n");
+
+
+    /**
+     * Sequencial
+     * 
+     * 
+    */
+    printf("\t\t<====== To Do List ======>\n");
+    printTaskList(todoList);
+    printf("\t\t<====== ========= ======>\n\n\n");
+
+    printf("\t\t<====== Doing List ======>\n");
+    printTaskList(doingList);
+    printf("\t\t<====== ========= ======>\n\n\n");
+
+    printf("\t\t<====== Done List ======>\n");
+    printTaskList(doneList);
+    printf("\t\t<====== ========= ======>\n\n\n");
+}
 
 /*******************************************************/
 /************************ TASKS ************************/
@@ -134,13 +216,13 @@ Task *createTask(void){
 
     printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
-    while(1){
-        if( new->priority<=0 || new->priority >=11 ){
+
+    if(new->priority<1 || new->priority > 10){
+        while(new->priority<1 || new->priority >10 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
             scanf("%d",&new->priority);
-        }
-        else{
-            break;
+            char c;
+            while((c = getchar()) != '\n' && c != EOF);
         }
     }
 
@@ -214,6 +296,9 @@ Task *searchTask(Tasklist list, int task){
  * 0 - Task not found
 */
 int taskIn(Tasklist list, int targetTaskId){
+
+    if(list->next == NULL)
+        return 0;
 
     Tasklist current  = list->next;
     Tasklist previous = list;
@@ -530,6 +615,30 @@ void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
         insertTodoTask(todoList,new);
         clearScreen();
         deleteTask(doingList,taskId);
+        printf("Task moved to To Do\n\n");
+
+    }
+    else {
+        printf("Given ID was not valid,returning to option menu\n");
+        sleep(2);
+    }
+    mypause();
+}
+
+void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId){
+
+    if (taskIn(doneList, taskId) == 1){
+        Task *new = searchTask(doneList,taskId);
+
+        char c;
+        while((c = getchar()) != '\n' && c != EOF);
+
+        new->person = NULL;
+        new->finalDate = NULL;
+
+        insertTodoTask(todoList,new);
+        clearScreen();
+        deleteTask(doneList,taskId);
         printf("Task moved to To Do\n\n");
 
     }
