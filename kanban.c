@@ -7,7 +7,7 @@
 int TASKS_ID=0; //contagem de tasks criadas
 int PEOPLE_ID=0;
 int MAX_DOING_TASKS=5; //max number of doing tasks
-int MAX_SIZE=50;
+int MAX_SIZE=254;
 
 void clearScreen(){
     printf("\e[1;1H\e[2J");
@@ -96,7 +96,7 @@ void printTaskList (Tasklist list){
     while (l != NULL){
 
         printf("Task ID: %d {\n", l->task->id);
-        printf("    Description: %s", l->task->description);
+        printf("    Description: %s\n", l->task->description);
         printf("    Priority: %d \n", l->task->priority);
         if(l->task->person != NULL){
             printf("    Assigned to: %s", l->task->person);
@@ -370,7 +370,7 @@ void insertTask(Tasklist list, Task *task){
     }
 
     //update File
-    saveInFile("creation", list);
+    //saveInFile("creation", list);
 }
 
 /**
@@ -428,7 +428,7 @@ void insertTodoTask (Tasklist list, Task *task){
     }
 
     //update File
-    saveInFile("todo", list);
+    //saveInFile("todo", list);
 
 }
 
@@ -605,7 +605,7 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
 
         //simplesmente escreve-se o nome da pessoa, não temos em conta o id da pessoa
         printf("\nWho will be in charge?\n\n   => ");
-        new->person=(char *)malloc(50*sizeof(char));
+        new->person=(char *)malloc(MAX_SIZE*sizeof(char));
         fgets(new->person,50,stdin);
 
         insertDoingTask(doingList, new);
@@ -736,7 +736,7 @@ void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
  *
  **/
 Date *setDate(){
-    Date *new = (Date *)malloc(sizeof(Date));
+    Date *new = (Date *)malloc(255*sizeof(Date));
 
     printf("Insert the date in the following format: DD/MM/AAAA\n\n   => ");
     scanf("%d/%d/%d",&new->day,&new->month,&new->year);
@@ -1025,8 +1025,7 @@ const char* getDataField(char* line, int num)
     return NULL;
 }
 
-void fileToTasks(const char *filename,Tasklist list)
-{
+void fileToTasks(const char *filename,Tasklist list){
     FILE* file = fopen("data", "r");
 
     Tasklist l = createTaskList();
@@ -1064,6 +1063,10 @@ void fileToTasks(const char *filename,Tasklist list)
  * 
 */
 void saveInFile(const char *filename, Tasklist list){
+
+    if(list==NULL)
+        return;
+
     FILE *file;
     file = fopen(filename, "w");
 
@@ -1072,14 +1075,20 @@ void saveInFile(const char *filename, Tasklist list){
     fprintf(file,";\n");
 
     //creationDateList
+
+    if(list->next == NULL){
+        fclose(file);
+        return;
+    }
+
     Tasklist l = list->next; /* Salta o header */
 
-    while (l){
+    while (l != NULL){
         fprintf(file,"%d", l->task->id);
         fprintf(file,";%s", l->task->description);
         fprintf(file,";%d", l->task->priority);
 
-         if(l->task->finalDate != NULL) {
+         if(l->task->person != NULL) {
             fprintf(file,";%s", l->task->person);
         }
         else 
