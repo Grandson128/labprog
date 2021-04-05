@@ -176,6 +176,10 @@ void menu(int option){
             printf("Press ENTER to proceed\n");
             getchar();
             break;
+        case 20:
+            saveInFile("data", creationDateList);
+            getchar();
+            break;
         default:
             break;
     }
