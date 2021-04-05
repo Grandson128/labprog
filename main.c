@@ -197,6 +197,10 @@ int main(){
     if(!(FileExists("data"))){
         CreateFile("data");
     }
+    /*
+    else {
+        fileToTasks("data",creationDateList);
+    }*/
 
     /*while(flag==0){
         Task *new = readFiles("data",contagem,flag);
