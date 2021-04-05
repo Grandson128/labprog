@@ -207,7 +207,7 @@ int main(){
 
         printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
 
-        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n8) Reopen Task\n9) Search all tasks by admin\n10) List To Do\n11) List Doing\n12) List Done\n\n0) Exit\n\n   => ");
+        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n8) Reopen Task\n9) Search all tasks by admin\n10) List To Do\n11) List Doing\n12) List Done\n13) List Kanban Board\n\n0) Exit\n\n   => ");
 
         scanf("%d", &option);
         getchar();
