@@ -72,10 +72,11 @@ void printlist (Tasklist list);
 Date *setDate();
 int validateDate(Date *date);
 int compareDate(Date *date1, Date *date2); //isto está bem?
+Date *createDate(int day, int month, int year);
 
 void saveInFile(const char *filename, Tasklist list);
 void clearFile(const char *filename);
-void fileToTasks(const char *filename,Tasklist list);
+Tasklist fileToTasks(const char *filename);
 const char* getDataField(char* line, int num);
 void CreateFile(const char *filename);
 int FileExists(const char *filename);

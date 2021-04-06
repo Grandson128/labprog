@@ -93,7 +93,7 @@ void printTaskList (Tasklist list){
         return;
     }
 
-    while (l != NULL){
+    while (l != NULL && l->task != NULL){
 
         printf("Task ID: %d {\n", l->task->id);
         printf("    Description: %s\n", l->task->description);
@@ -103,7 +103,6 @@ void printTaskList (Tasklist list){
         }
         printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
-
         if(l->task->finalDate != NULL)
             printf("    Final Date: %d/%d/%d \n", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
 
@@ -207,25 +206,19 @@ void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
 /*******************************************************/
 
 Task *createTask(void){
-
-
-    int ID=TASKS_ID++;
-
+    TASKS_ID = TASKS_ID +1;
     Task *new = (Task *)malloc(sizeof(Task));
-    new->id=ID;
-    clearScreen();
-
+    new->id=TASKS_ID;
+    //clearScreen();
     printf("Describe the task you would like to add\n\n   => ");
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->description,MAX_SIZE,stdin);
 
     new->description[strcspn(new->description, "\n")] = 0; //deleta o \n do stdin
 
-
-
     printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
-
+    
     if(new->priority<1 || new->priority > 10){
         while(new->priority<1 || new->priority >10 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
@@ -260,6 +253,7 @@ Task *createTask(void){
     }
 
    new->finalDate=NULL;
+   new->person = NULL;
 
     return new;
 
@@ -368,9 +362,6 @@ void insertTask(Tasklist list, Task *task){
             current->next = new;
         }
     }
-
-    //update File
-    //saveInFile("creation", list);
 }
 
 /**
@@ -388,31 +379,27 @@ void insertTodoTask (Tasklist list, Task *task){
     new->info = 0;
     list-> info++;
     list->lastID = task->id;
-
+    
     if(task!=NULL && current == NULL){
         new->next = current;
         previous->next = new;
-    }else if(task!=NULL && current != NULL){
-
-        while (task->priority < current->task->priority){
+    }else if(task!=NULL && current != NULL && current->task!=NULL){
+        
+        while (task->priority < current->task->priority && current->next!=NULL){
             previous = current;
             current = current->next;
         }
-
         if(task->priority > current->task->priority){
             previous->next = new;
             new->next = current;
         }else if(task->priority < current->task->priority){
             new->next = current->next;
             current->next = new;
-
         }else if(task->priority == current->task->priority){
-
             while (compareDate(task->creationDate,current->task->creationDate) == 1 && (task->priority == current->task->priority) && current->next != NULL ){
                 previous = current;
                 current = current->next;
             }
-
             if(compareDate(task->creationDate, current->task->creationDate) != 1){
                 previous->next = new;
                 new->next = current;
@@ -426,10 +413,6 @@ void insertTodoTask (Tasklist list, Task *task){
         }
 
     }
-
-    //update File
-    //saveInFile("todo", list);
-
 }
 
 /**
@@ -470,8 +453,6 @@ void insertDoingTask (Tasklist list, Task *task){
         current->next = new;
     }
 
-    //update Files
-    saveInFile("doing", list);
 }
 
 /**
@@ -484,13 +465,6 @@ void insertDoneTask (Tasklist list, Task *task){
     Tasklist previous = list;
     Tasklist current = list->next;
     Tasklist new = (Tasklist)malloc(sizeof(Node));
-
-    printf("\nTask final date?\n");
-    task->finalDate=setDate();
-    if(validateDate(task->finalDate)==1){
-        printf("\nGiven date was not valid\n");
-        task->finalDate=setDate();
-    }
 
     new->task = task;
     new->info = 0;
@@ -520,8 +494,6 @@ void insertDoneTask (Tasklist list, Task *task){
         }
     }
 
-    //update Files
-    saveInFile("done", list);
 }
 
 /**
@@ -607,8 +579,10 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
         printf("\nWho will be in charge?\n\n   => ");
         new->person=(char *)malloc(MAX_SIZE*sizeof(char));
         fgets(new->person,50,stdin);
+        new->person[strcspn(new->person, "\n")] = 0;
 
         insertDoingTask(doingList, new);
+        
         clearScreen();
         //printTaskList(doingList);
         deleteTask(todoList, taskId);
@@ -705,6 +679,16 @@ void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId){
 */
 void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
     if (taskIn(doingList, taskId) == 1){
+
+        Task *new = searchTask(doingList,taskId);
+
+        printf("\nTask final date?\n");
+        new->finalDate=setDate();
+        if(validateDate(new->finalDate)==1){
+            printf("\nGiven date was not valid\n");
+            new->finalDate=setDate();
+        }
+
         insertDoneTask(doneList, searchTask(doingList, taskId));
         clearScreen();
         //printTaskList(doneList);
@@ -745,6 +729,21 @@ Date *setDate(){
     return new;
 }
 
+/**
+ *  Creates new date using given values
+ *  Only use when reading tasks from files
+ * 
+ *  @day
+ *  @month
+ *  @year
+ */
+Date *createDate(int day, int month, int year){
+    Date *new = (Date *)malloc(255*sizeof(Date));
+    new->day = day;
+    new->month=month;
+    new->year=year;
+    return new;
+} 
 
 void changeDate(Date *date) { //void ou date * ? como apenas dados do apontador, assumi que fosse void
     printf("Insert new date in the following format:\n DD/MM/AAAA \n");
@@ -939,137 +938,152 @@ void CreateFile(const char *filename) {
     fclose(file);
 }
 
+/**
+ * Function that returns a tasklist populated with tasks stored in file
+ * 
+ * @filename:
+ *  creation - file with tasks from creationDate taskList, all tasks ordered by creation date
+ *  todo - file with tasks from To Do taskList
+ *  doing - file with tasks from Doing taskList
+ *  done - file with tasks from Done taskList
+ * 
+ * In this function the TASKS_ID variable 
+ * is updated with the Last inserted task ID stored in the creation list/file
+ * 
+*/
+Tasklist fileToTasks(const char *filename){
+    FILE* file = fopen(filename, "r");
+    int count = 1, headerFlag=1;
+    int nTasks=0, lastID=0;
+    char line[1024];
+    Tasklist list = createTaskList();
+    int creationDay, creationMonth, creationYear;
+    int goalDay, goalMonth, goalYear;
+    int finalDay, finalMonth, finalYear;
 
-//introduzir tasks de um certo file na tasklist indicada (inicio do programa)
-/*
-Task readFiles(const char *filename, int contagem, int flag){
-    FILE *file;
-    file = fopen(filename, "r");
-    int MAX_SIZE=50;
-    int ID=TASKS_ID++;
-    char buffer[MAX_SIZE];
-    Task *new = (Task *)malloc(sizeof(Task));
 
-    if(file == NULL){
-        exit(EXIT_FAILURE);
-    }
+    while (fgets(line, 1024, file)){
+        char *tmp = strdup(line);
+        char *tok = tmp, *end = tmp;
 
-    for(int i=0; i<contagem*8; i++){ //ignorar tasks já introduzidas
-        fgets(buffer, MAX_SIZE, file);
-    }
+        Task *new = (Task *)malloc(sizeof(Task));
 
-    while(fgets(buffer, MAX_SIZE, file)){   //ler linha-a-linha o ficheiro
-        if(buffer[0] == 'T'){   //Caso encontre o inicio de uma nova task
-            int line=1;
-            new->id=ID;
-            new->finalDate=NULL;
-            while(fgets(buffer,MAX_SIZE,file)){
-                if(line==1){    //Descriçao
-                    int i=0;
-                    char descricao[MAX_SIZE];
-                    while(buffer[i+18]!='\n'){  //inicio da descriçao=> i=18. fim da descriçao=> '\n'
-                        descricao[i]=buffer[i+18];
-                        i++;
+        while (tok != NULL) {
+            strsep(&end, ";\n");
+            //printf("%d - %s\n",count, tok);
+            if (headerFlag==1 && count==1){
+                if(*tok != '\0'){
+                    nTasks=atoi(tok);
+                }
+                //printf("Nº tasks: %d", atoi(tok));
+            }else if (headerFlag==1 && count==2){
+                if(*tok != '\0'){
+                    lastID=atoi(tok);
+                }
+                //printf("  Last ID: %d\n", atoi(tok));
+            }
+            
+            if(headerFlag != 1){
+                if(count == 1){
+                    //printf("ID: %d\n", atoi(tok));
+                    new->id=atoi(tok);
+                }else if(count == 2){
+                    //printf("Desc: %s\n", tok);
+                    new->description=(char *)malloc(MAX_SIZE*sizeof(char));
+                    new->description=strdup(tok);
+                }else if(count == 3){
+                    //printf("Prio: %d\n", atoi(tok));
+                    new->priority=atoi(tok);
+                }else if(count == 4){
+                    //printf("Person: %s\n", tok);
+                    //empty person
+                    if(*tok == '\0'){
+                        new->person=NULL;
+                    }else{
+                        new->person=tok;
                     }
-                    new->description= (char *)malloc(MAX_SIZE*sizeof(char)); //nao sei se é necessario
-                    new->description= descricao;
+                }else if(count == 5){
+                    //printf("Creation Date: %d/", atoi(tok));
+                    creationDay=atoi(tok);
+                }else if(count == 6){
+                    //printf("%d/", atoi(tok));
+                    creationMonth=atoi(tok);
+                }else if(count == 7){
+                    //printf("%d\n", atoi(tok));
+                    creationYear=atoi(tok);
+                }else if(count == 8){
+                    //printf("Goal Date: %d/", atoi(tok));
+                    goalDay=atoi(tok);
+                }else if(count == 9){
+                    //printf("%d/", atoi(tok));
+                    goalMonth=atoi(tok);
+                }else if(count == 10){
+                    //printf("%d\n", atoi(tok));
+                    goalYear=atoi(tok);
+                }else if(count == 11){
+                    //printf("Final Date: %d/", atoi(tok));
+                    if(*tok != '\0'){
+                        finalDay=atoi(tok);
+                    }else finalDay=0;
+                }else if(count == 12){
+                    //printf("%d/", atoi(tok));
+                    if(*tok != '\0'){
+                        finalMonth=atoi(tok);
+                    }else finalMonth=0;
+                }else if(count == 13){
+                    //printf("%d\n", atoi(tok));
+                    if(*tok != '\0'){
+                        finalYear=atoi(tok);
+                    }else finalYear=0;
                 }
-                else if(line==2){    //Prioridade
-                    if(buffer[15]=='0'){
-                        new->priority = 10; //unico numero com 2 dígitos possivel
-                    }
-                    else{
-                        new->priority = buffer[14];
-                    }
-                }
-                else if(line==3){    //Pessoa
-                    int i=0;
-                    char nome[MAX_SIZE];
-                    while(buffer[i+17] != '\n'){
-                        nome[i]=buffer[i+17];
-                        i++;
-                    }
-                    new->person= (char *)malloc(MAX_SIZE*sizeof(char));  //nao sei se é necessario
-                    new->person= nome;
-                }
-                else if(line==4){    //Data de Criaçao
-                    new->creationDate->day = buffer[19]*10 + buffer[20];
-                    new->creationDate->month = buffer[22]*10 + buffer[23];
-                    new->creationDate->year = buffer[25]*1000 + buffer[26]*100 + buffer[27]*10 + buffer[28];
-                }
-                else if(line==5){
-                    new->targetDate->day = buffer[15]*10 + buffer[16];
-                    new->targetDate->month = buffer[18]*10 + buffer[19];
-                    new->targetDate->year = buffer[21]*1000 + buffer[22]*100 + buffer[23]*10 + buffer[24];
-                }
-                line++;
 
             }
+
+            tok = end;
+            count++;
         }
-    }
-    fclose(file);
-    return new;
-}
-*/
 
-const char* getDataField(char* line, int num)
-{
-    const char* token;
-    for (token = strtok(line, ";");
-            token && *token;
-            token = strtok(NULL, ";\n"))
-    {
-        if (!--num)
-            return token;
-    }
-    return NULL;
-}
+        if(headerFlag != 1){
 
-void fileToTasks(const char *filename,Tasklist list){
-    FILE* file = fopen("data", "r");
+            new->creationDate = createDate(creationDay, creationMonth, creationYear);
+            new->targetDate = createDate(goalDay, goalMonth, goalYear);
 
-/*
-    Tasklist l = createTaskList();
+            if(finalDay != 0 && finalMonth != 0 && finalYear != 0){
+                new->finalDate = createDate(finalDay, finalMonth, finalYear);
+            }else {
+                new->finalDate=NULL;
+            }
 
-    char header[50];
-    char* tmp =strdup(header);
-    l->info=getDataField(tmp,1);
-    l->lastID=getDataField(tmp,2);
-    free(tmp);*/
+            //control the insertion method using the filename
+            if(strcmp(filename, "creation") == 0){
+                insertTask(list, new);
+            }else if(strcmp(filename, "todo") == 0){
+                insertTodoTask(list, new);
+            }else if(strcmp(filename, "doing") == 0){
+                insertDoneTask(list, new);
+            }else if(strcmp(filename, "done") == 0){
+                insertDoneTask(list,new);
+            }
 
+        }
 
-    char line[1024];
-  //  Task *new = (Task *)malloc(sizeof(Task));
-    
-    while (fgets(line, 1024, file)){
-        Task *new = (Task *)malloc(sizeof(Task));
-        char* tmp = strdup(line);
-
-        new->id=getDataField(tmp,1);
-        new->description=getDataField(tmp,2);
-        new->priority=getDataField(tmp,3);
-        new->person=getDataField(tmp,4);
-
-        new->creationDate->day=getDataField(tmp,5);
-        new->creationDate->month=getDataField(tmp,6);
-        new->creationDate->year=getDataField(tmp,7);
-
-        new->targetDate->day=getDataField(tmp,8);
-        new->targetDate->month=getDataField(tmp,9);
-        new->targetDate->year=getDataField(tmp,10);
-
-        new->targetDate->day=getDataField(tmp,11);
-        new->targetDate->month=getDataField(tmp,12);
-        new->targetDate->year=getDataField(tmp,13);
-
-        insertTask(list, new);
-        //  insertTodoTask(list, new);
-        //printTaskList(list);
-
+        count=0; //change this to 1 at your own risk
         free(tmp);
+        count++; // and delete this too at your own risk
+        headerFlag=0;
     }
-   //  printTaskList(list);
-        fclose(file);
+
+    //update global task id counter
+    if(lastID > TASKS_ID){
+        TASKS_ID=lastID;
+    }
+
+    //make use of the first two values stored in the file
+    list->info=nTasks;
+    list->lastID=lastID;
+
+    fclose(file);
+    return list;
 }
 
 /**
@@ -1090,13 +1104,10 @@ void saveInFile(const char *filename, Tasklist list){
     FILE *file;
     file = fopen(filename, "w");
 
-    /*
     fprintf(file,"%d", list->info); 
     fprintf(file,";%d", list->lastID); 
     fprintf(file,";\n");
-    */
-    //creationDateList
-
+    
     if(list->next == NULL){
         fclose(file);
         return;
@@ -1104,11 +1115,10 @@ void saveInFile(const char *filename, Tasklist list){
 
     Tasklist l = list->next; /* Salta o header */
 
-    while (l != NULL){
+    while (l != NULL && l->task != NULL){
         fprintf(file,"%d", l->task->id);
         fprintf(file,";%s", l->task->description);
         fprintf(file,";%d", l->task->priority);
-
          if(l->task->person != NULL) {
             fprintf(file,";%s", l->task->person);
         }
@@ -1125,11 +1135,13 @@ void saveInFile(const char *filename, Tasklist list){
 
 
          if(l->task->finalDate != NULL) {
-              fprintf(file,";%d", l->task->finalDate->day);
+            fprintf(file,";%d", l->task->finalDate->day);
             fprintf(file,";%d", l->task->finalDate->month);
             fprintf(file,";%d", l->task->finalDate->year);
         }
         else
+            fprintf(file,";");
+            fprintf(file,";");
             fprintf(file,";");
 
         l=l->next;

@@ -26,7 +26,10 @@ void menu(int option){
             insertTask(creationDateList, newTask);
             insertTodoTask(todoList, newTask);
             clearScreen();
-            printTaskList(creationDateList);
+            printTaskList(todoList);
+            saveInFile("creation", creationDateList);
+            saveInFile("todo", todoList);
+
             printf("Press ENTER to proceed\n");
             getchar();
             break;
@@ -64,6 +67,10 @@ void menu(int option){
                 printf("Insert the task ID you want to transfer to Doing\n\n   => ");
                 scanf("%d", &taskId);
                 assignTodoDoing(todoList, doingList, taskId);
+
+                saveInFile("todo", todoList);
+                saveInFile("doing", doingList);
+
             }
             else {
                 printf("Empty list\n\nNo tasks on the To Do list\nReturning to main menu...\n");
@@ -77,6 +84,10 @@ void menu(int option){
                 printf("Insert the task ID you want to transfer to ToDo\n\n   => ");
                 scanf("%d", &taskId);
                 assignDoingTodo(todoList, doingList, taskId);
+
+                saveInFile("doing", doingList);
+                saveInFile("todo", todoList);
+
             }
             else {
                 printf("Empty list\n\nNo Tasks on the To Do list\nReturning to main menu...\n");
@@ -90,6 +101,10 @@ void menu(int option){
                 printf("Insert the task ID you want to transfer to Done\n\n   => ");
                 scanf("%d", &taskId);
                 assignDoingDone(doingList, doneList, taskId);
+
+                saveInFile("doing", doingList);
+                saveInFile("done", doneList);
+
             }
             else {
                 printf("Empty list\n\nNo tasks on the Doing list\nReturning to main menu...\n");
@@ -105,6 +120,7 @@ void menu(int option){
                 while(1){
                     if(taskIn(doingList,taskId) == 1){
                         changePerson(creationDateList, taskId);
+                        saveInFile("doing", doingList);
                         printf("\nAdmin changed\nReturning to main menu...\n");
                         break;
                     }
@@ -126,6 +142,10 @@ void menu(int option){
                 printf("Insert the task ID you want to transfer to ToDo\n\n   => ");
                 scanf("%d", &taskId);
                 assignDoneTodo(doneList, todoList, taskId);
+
+                saveInFile("todo", todoList);
+                saveInFile("done", doneList);
+
             }
             else {
                 printf("Empty list\n\nNo Tasks on the Done list\nReturning to main menu...\n");
@@ -177,10 +197,21 @@ void menu(int option){
             printf("Press ENTER to proceed\n");
             getchar();
             break;
-        case 20:
-            saveInFile("data", creationDateList);
+        case 20: //testing
+            // creationDateList=fileToTasks("creation");
+            // todoList=fileToTasks("todo");
+            // doingList=fileToTasks("doing");
+            // doneList=fileToTasks("done");
+            //printf("\n\nLasIDList:%d   TASKS_ID:%d\n\n", creationDateList->lastID, TASKS_ID);
             getchar();
             break;
+        case 30:
+            clearFile("creation");
+            clearFile("todo");
+            clearFile("doing");
+            clearFile("done");
+            printf("\n <====== Files Cleared ======>\n");
+            getchar();
         default:
             break;
     }
@@ -222,11 +253,10 @@ int main(){
 
     generateEmptyFiles();
 
-    /*while(flag==0){
-        Task *new = readFiles("data",contagem,flag);
-        //insert new
-        //contagem++;
-    }*/
+    creationDateList=fileToTasks("creation");
+    todoList=fileToTasks("todo");
+    doingList=fileToTasks("doing");
+    doneList=fileToTasks("done");
 
     while (option != 0){
         clearScreen();
@@ -235,7 +265,7 @@ int main(){
 
         printf("Behold the glorious menu \n\nPlease, select one of following options:\n\n");
 
-        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n8) Reopen Task\n9) Search all tasks by admin\n10) List To Do\n11) List Doing\n12) List Done\n13) List Kanban Board\n\n0) Exit\n\n   => ");
+        printf("1) Create new task\n2) Delete task\n3) List tasks\n4) Start Doing task\n5) Return task to To Do\n6) Mark task as Done\n7) Change admin of a Doing task\n8) Reopen Task\n9) Search all tasks by admin\n10) List To Do\n11) List Doing\n12) List Done\n13) List Kanban Board\n30) Clear All Files\n\n0) Exit\n\n   => ");
 
         scanf("%d", &option);
         getchar();
