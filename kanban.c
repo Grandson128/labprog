@@ -114,16 +114,16 @@ void printTaskList (Tasklist list){
 }
 
 /**
- * 
+ *
  * Print all lists
- * 
+ *
 */
 void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
 
     /**
-     * 
+     *
      * Lado a Lado
-     * 
+     *
     */
 
     // Tasklist todo = createTaskList();
@@ -132,17 +132,17 @@ void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
     // if(todoList->next != NULL ){todo=todoList->next;}else{todo = NULL;}
     // if(doingList->next != NULL ){doing=doingList->next;}else{doing = NULL;}
     // if(doneList->next != NULL ){done=doneList->next;}else{done = NULL;}
-    
-    
+
+
     // printf("TODO%6s   |%6sDOING%6s|%6sDONE\n","","","","");
     // while (todo != NULL || doing != NULL || done != NULL){
-        
+
     //     /*ID*/
     //     if(todo==NULL) printf("%6s",""); else printf("ID:%6d", todo->task->id);
     //     if(doing==NULL) printf("    |%6s%6s     |","",""); else printf("| ID:%6d |", doing->task->id);
     //     if(done==NULL) printf("%6s\n",""); else printf("ID:%6d\n", done->task->id);
 
-        
+
 
     //     /*Description*/
     //     // if(todo==NULL) printf(""); else printf("Descp:%6s", todo->task->description);
@@ -155,9 +155,9 @@ void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
     //     if(done==NULL) printf("\n"); else printf("Priority:%d\n", done->task->priority);
 
     //     /*Person*/
-    //     if(todo==NULL) printf("%s",""); else if(todo->task->person != NULL) printf("Person:%6s", todo->task->person); else printf("%s",""); 
-    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->person != NULL) printf("|Person:%6s|", doing->task->person); else printf("%s",""); 
-    //     if(done==NULL) printf("\n"); else if(done->task->person != NULL) printf("Person:%6s\n", done->task->person); else printf("\n"); 
+    //     if(todo==NULL) printf("%s",""); else if(todo->task->person != NULL) printf("Person:%6s", todo->task->person); else printf("%s","");
+    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->person != NULL) printf("|Person:%6s|", doing->task->person); else printf("%s","");
+    //     if(done==NULL) printf("\n"); else if(done->task->person != NULL) printf("Person:%6s\n", done->task->person); else printf("\n");
 
     //     /*Creation Date*/
     //     if(todo==NULL) printf("%s",""); else printf("C: %d/%d/%d", todo->task->creationDate->day, todo->task->creationDate->month, todo->task->creationDate->year);
@@ -170,9 +170,9 @@ void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
     //     if(done==NULL) printf("\n"); else printf("G: %d/%d/%d \n", done->task->targetDate->day, done->task->targetDate->month, done->task->targetDate->year);
 
     //     /*Final Date*/
-    //     if(todo==NULL) printf("%s",""); else if(todo->task->finalDate != NULL) printf("F: %d/%d/%d", todo->task->finalDate->day, todo->task->finalDate->month, todo->task->finalDate->year); else printf("%s",""); 
-    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->finalDate != NULL) printf("|F: %d/%d/%d |", doing->task->finalDate->day, doing->task->finalDate->month, doing->task->finalDate->year); else printf("%6s%6s |%6s%6s     |","","","",""); 
-    //     if(done==NULL) printf("\n"); else if(done->task->finalDate != NULL) printf("F: %d/%d/%d \n", done->task->finalDate->day, done->task->finalDate->month, done->task->finalDate->year); else printf("%s\n",""); 
+    //     if(todo==NULL) printf("%s",""); else if(todo->task->finalDate != NULL) printf("F: %d/%d/%d", todo->task->finalDate->day, todo->task->finalDate->month, todo->task->finalDate->year); else printf("%s","");
+    //     if(doing==NULL) printf("%6s%6s |%6s%6s     |","","","",""); else if(doing->task->finalDate != NULL) printf("|F: %d/%d/%d |", doing->task->finalDate->day, doing->task->finalDate->month, doing->task->finalDate->year); else printf("%6s%6s |%6s%6s     |","","","","");
+    //     if(done==NULL) printf("\n"); else if(done->task->finalDate != NULL) printf("F: %d/%d/%d \n", done->task->finalDate->day, done->task->finalDate->month, done->task->finalDate->year); else printf("%s\n","");
 
     //     printf("<========>\n");
 
@@ -186,8 +186,8 @@ void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList){
 
     /**
      * Sequencial
-     * 
-     * 
+     *
+     *
     */
     printf("\t\t<====== To Do List ======>\n");
     printTaskList(todoList);
@@ -230,15 +230,8 @@ Task *createTask(void){
         while(new->priority<1 || new->priority >10 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
             scanf("%d",&new->priority);
-<<<<<<< HEAD
-            
-        }
-        else{
-            break;
-=======
             char c;
             while((c = getchar()) != '\n' && c != EOF);
->>>>>>> b2347bbc818a447dbf8d0fda119e78a28cfc1704
         }
     }
 
@@ -639,7 +632,7 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
  * @todolist - List with Todo tasks
  * @doinglist - List with Doing tasks
  * @taskId - Task identifier
- * 
+ *
 */
 void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId){
     if (taskIn(doingList, taskId) == 1){
@@ -1047,7 +1040,7 @@ void fileToTasks(const char *filename,Tasklist list){
 
     char line[1024];
   //  Task *new = (Task *)malloc(sizeof(Task));
-    
+
     while (fgets(line, 1024, file)){
         Task *new = (Task *)malloc(sizeof(Task));
         char* tmp = strdup(line);
@@ -1080,14 +1073,14 @@ void fileToTasks(const char *filename,Tasklist list){
 }
 
 /**
- * 
+ *
  * Saves list in file
  * SAVE FORMAT:
  * ****list info:
  * [nº tasks];[last task identifier];
  * ****tasks:
  * [id];[description];[priority];[person];[creation day];[creation month];[creation year];[target day];[target month];[target year];[final day];[final month];[final year]
- * 
+ *
 */
 void saveInFile(const char *filename, Tasklist list){
 
@@ -1098,8 +1091,8 @@ void saveInFile(const char *filename, Tasklist list){
     file = fopen(filename, "w");
 
     /*
-    fprintf(file,"%d", list->info); 
-    fprintf(file,";%d", list->lastID); 
+    fprintf(file,"%d", list->info);
+    fprintf(file,";%d", list->lastID);
     fprintf(file,";\n");
     */
     //creationDateList
@@ -1119,7 +1112,7 @@ void saveInFile(const char *filename, Tasklist list){
          if(l->task->person != NULL) {
             fprintf(file,";%s", l->task->person);
         }
-        else 
+        else
             fprintf(file,";");
 
         fprintf(file,";%d", l->task->creationDate->day);
