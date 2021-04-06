@@ -56,9 +56,14 @@ void insertDoingTask (Tasklist list, Task *task);
 void insertDoneTask (Tasklist list, Task *task);
 void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId);
 void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId);
+void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId);
+void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId);
 void mypause (void);
 void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist doneList, int targetTaskId);
 int taskIn(Tasklist list, int targetTaskId);
+void tasksByPerson(Tasklist list, const char *name);
+void changePerson(Tasklist list, int targetTaskId);
+void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList);
 
 void deleteTask (Tasklist list, int item);
 Task *searchTask (Tasklist list, int task); //Using task Identifier to search
@@ -68,5 +73,14 @@ Date *setDate();
 int validateDate(Date *date);
 int compareDate(Date *date1, Date *date2); //isto está bem?
 
+void saveInFile(const char *filename, Tasklist list);
+void clearFile(const char *filename);
+void fileToTasks(const char *filename,Tasklist list);
+const char* getDataField(char* line, int num);
+void CreateFile(const char *filename);
+int FileExists(const char *filename);
+
+void mypause (void);
+void clearScreen(void);
 
 #endif
