@@ -138,6 +138,7 @@ Task *createTask(void){
         if( new->priority<=0 || new->priority >=11 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
             scanf("%d",&new->priority);
+            
         }
         else{
             break;
@@ -195,7 +196,7 @@ Task *searchTask(Tasklist list, int task){
     //free(previous);
 
     if ((current) != NULL && (current)->task->id != targetValue){
-        current = NULL; 
+        current = NULL;
         /* Se elemento não encontrado*/
         return NULL;
     }
