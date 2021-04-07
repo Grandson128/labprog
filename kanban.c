@@ -523,8 +523,6 @@ void deleteTask(Tasklist list, int targetTaskId){
     previous->next = current->next;
     free(current);
     list->info--;
-    //TODO: Handle task removal in file
-
 }
 
 /**
@@ -805,8 +803,6 @@ int validateDate(Date *date){
 }
 
 
-
-
 /**
  *
  * Compares if date1 is after date2
@@ -900,7 +896,6 @@ void tasksByPerson(Tasklist list, const char *name){
 /*******************************************************/
 /************************ FILES ************************/
 /*******************************************************/
-
 
 
 /*
