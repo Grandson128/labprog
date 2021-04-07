@@ -239,18 +239,27 @@ Task *createTask(void){
             break;
         }
     }
-
+    /*
     printf("\nWhen do you plan to finish the task?\n");
     new->targetDate=setDate();
     while(1){
-        if(validateDate(new->targetDate)==1){
+        if(validateDate(new->targetDate)==1 && compareDate(new->creationDate,new->targetDate)==1){
             printf("Given date was not valid\n");
+            getchar();
             new->targetDate=setDate();
         }
         else{
             break;
         }
-    }
+    }*/
+
+    
+    printf("\nWhen do you plan to finish the task?\n");
+    new->targetDate=setDate();
+    while(validateDate(new->targetDate)==0 && compareDate(new->creationDate,new->targetDate)==1 || validateDate(new->targetDate)==1){
+            printf("\nGiven date was not valid\n");
+            new->targetDate=setDate();
+        }
 
    new->finalDate=NULL;
    new->person = NULL;
@@ -563,7 +572,8 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
     if (taskIn(todoList, taskId) == 1){
 
         if(doingList->info >= MAX_DOING_TASKS){
-            printf("Max number of tasks reached\n");
+            printf("Max number of tasks in DOING fase.\n");
+            getchar();
             mypause();
             return;
         }
@@ -762,24 +772,24 @@ int validateDate(Date *date){
     int mm= (date->month);
     int yy= (date->year);
 
-    if(yy>=0)
+    if(yy>=0 && yy<=9999)
     {
         if(mm>=1 && mm<=12)
         {
             if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=28) && (mm==2)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else {
@@ -965,32 +975,32 @@ Tasklist fileToTasks(const char *filename){
 
         while (tok != NULL) {
             strsep(&end, ";\n");
-            //printf("%d - %s\n",count, tok);
+            printf("%d - %s\n",count, tok);
             if (headerFlag==1 && count==1){
                 if(*tok != '\0'){
                     nTasks=atoi(tok);
                 }
-                //printf("Nº tasks: %d", atoi(tok));
+                printf("Nº tasks: %d", atoi(tok));
             }else if (headerFlag==1 && count==2){
                 if(*tok != '\0'){
                     lastID=atoi(tok);
                 }
-                //printf("  Last ID: %d\n", atoi(tok));
+                printf("  Last ID: %d\n", atoi(tok));
             }
             
             if(headerFlag != 1){
                 if(count == 1){
-                    //printf("ID: %d\n", atoi(tok));
+                    printf("ID: %d\n", atoi(tok));
                     new->id=atoi(tok);
                 }else if(count == 2){
-                    //printf("Desc: %s\n", tok);
+                    printf("Desc: %s\n", tok);
                     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
                     new->description=strdup(tok);
                 }else if(count == 3){
-                    //printf("Prio: %d\n", atoi(tok));
+                    printf("Prio: %d\n", atoi(tok));
                     new->priority=atoi(tok);
                 }else if(count == 4){
-                    //printf("Person: %s\n", tok);
+                    printf("Person: %s\n", tok);
                     //empty person
                     if(*tok == '\0'){
                         new->person=NULL;
@@ -998,35 +1008,35 @@ Tasklist fileToTasks(const char *filename){
                         new->person=tok;
                     }
                 }else if(count == 5){
-                    //printf("Creation Date: %d/", atoi(tok));
+                    printf("Creation Date: %d/", atoi(tok));
                     creationDay=atoi(tok);
                 }else if(count == 6){
-                    //printf("%d/", atoi(tok));
+                    printf("%d/", atoi(tok));
                     creationMonth=atoi(tok);
                 }else if(count == 7){
-                    //printf("%d\n", atoi(tok));
+                    printf("%d\n", atoi(tok));
                     creationYear=atoi(tok);
                 }else if(count == 8){
-                    //printf("Goal Date: %d/", atoi(tok));
+                    printf("Goal Date: %d/", atoi(tok));
                     goalDay=atoi(tok);
                 }else if(count == 9){
-                    //printf("%d/", atoi(tok));
+                    printf("%d/", atoi(tok));
                     goalMonth=atoi(tok);
                 }else if(count == 10){
-                    //printf("%d\n", atoi(tok));
+                    printf("%d\n", atoi(tok));
                     goalYear=atoi(tok);
                 }else if(count == 11){
-                    //printf("Final Date: %d/", atoi(tok));
+                    printf("Final Date: %d/", atoi(tok));
                     if(*tok != '\0'){
                         finalDay=atoi(tok);
                     }else finalDay=0;
                 }else if(count == 12){
-                    //printf("%d/", atoi(tok));
+                    printf("%d/", atoi(tok));
                     if(*tok != '\0'){
                         finalMonth=atoi(tok);
                     }else finalMonth=0;
                 }else if(count == 13){
-                    //printf("%d\n", atoi(tok));
+                    printf("%d\n", atoi(tok));
                     if(*tok != '\0'){
                         finalYear=atoi(tok);
                     }else finalYear=0;
@@ -1055,7 +1065,7 @@ Tasklist fileToTasks(const char *filename){
             }else if(strcmp(filename, "todo") == 0){
                 insertTodoTask(list, new);
             }else if(strcmp(filename, "doing") == 0){
-                insertDoneTask(list, new);
+                insertDoingTask(list, new);
             }else if(strcmp(filename, "done") == 0){
                 insertDoneTask(list,new);
             }
