@@ -239,18 +239,27 @@ Task *createTask(void){
             break;
         }
     }
-
+    /*
     printf("\nWhen do you plan to finish the task?\n");
     new->targetDate=setDate();
     while(1){
         if(validateDate(new->targetDate)==1 && compareDate(new->creationDate,new->targetDate)==1){
             printf("Given date was not valid\n");
+            getchar();
             new->targetDate=setDate();
         }
         else{
             break;
         }
-    }
+    }*/
+
+    
+    printf("\nWhen do you plan to finish the task?\n");
+    new->targetDate=setDate();
+    while(validateDate(new->targetDate)==0 && compareDate(new->creationDate,new->targetDate)==1 || validateDate(new->targetDate)==1){
+            printf("\nGiven date was not valid\n");
+            new->targetDate=setDate();
+        }
 
    new->finalDate=NULL;
    new->person = NULL;
@@ -765,24 +774,24 @@ int validateDate(Date *date){
     int mm= (date->month);
     int yy= (date->year);
 
-    if(yy>=0)
+    if(yy>=0 && yy<=9999)
     {
         if(mm>=1 && mm<=12)
         {
             if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=28) && (mm==2)) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
-                printf("\nDate is valid.\n");
+                printf("\nDate exists.\n");
                 return 0;
             }
             else {
