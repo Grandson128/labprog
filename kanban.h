@@ -45,11 +45,12 @@ typedef struct node{
 Tasklist createTaskList();
 Tasklist removeTaskList (Tasklist list);
 int emptyTaskList (Tasklist list);
-int fullTaskList (Tasklist list);
-int emptyTaskList(Tasklist list);
-int countTaskList(Tasklist list);
 void printTaskList (Tasklist list);
+void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList);
 
+Task *createTask();
+Task *searchTask (Tasklist list, int task); 
+int taskIn(Tasklist list, int targetTaskId);
 void insertTask (Tasklist list, Task *task);
 void insertTodoTask (Tasklist list, Task *task);
 void insertDoingTask (Tasklist list, Task *task);
@@ -57,27 +58,21 @@ void insertDoneTask (Tasklist list, Task *task);
 void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId);
 void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId);
 void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId);
-void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId);
-void mypause (void);
-void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist doneList, int targetTaskId);
-int taskIn(Tasklist list, int targetTaskId);
-void tasksByPerson(Tasklist list, const char *name);
-void changePerson(Tasklist list, int targetTaskId);
-void printBoard(Tasklist todoList, Tasklist doingList, Tasklist doneList);
-
 void deleteTask (Tasklist list, int item);
-Task *searchTask (Tasklist list, int task); //Using task Identifier to search
-void printlist (Tasklist list);
+void purgeTask(Tasklist list, Tasklist todoList, Tasklist doingList, Tasklist doneList, int targetTaskId);
+void assignDoingTodo(Tasklist todoList, Tasklist doingList, int taskId);
 
 Date *setDate();
 int validateDate(Date *date);
-int compareDate(Date *date1, Date *date2); //isto está bem?
+int compareDate(Date *date1, Date *date2);
 Date *createDate(int day, int month, int year);
+
+void changePerson(Tasklist list, int targetTaskId);
+void tasksByPerson(Tasklist list, const char *name);
 
 void saveInFile(const char *filename, Tasklist list);
 void clearFile(const char *filename);
 Tasklist fileToTasks(const char *filename);
-const char* getDataField(char* line, int num);
 void CreateFile(const char *filename);
 int FileExists(const char *filename);
 

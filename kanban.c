@@ -62,23 +62,6 @@ int emptyTaskList(Tasklist list){
     return (list->next == NULL ? 1 : 0);
 }
 
-//não há limite máximo definido para o tamanho da lista
-int fullTaskList(Tasklist list){
-   return 0;
-}
-
-int countTaskList(Tasklist list){
-
-    int count = 0;
-    while(list)
-    {
-        count++;
-        list=list->next;
-    }
-
-    return count;
-}
-
 /**
  *
  *  Prints task list
@@ -753,13 +736,6 @@ Date *createDate(int day, int month, int year){
     return new;
 } 
 
-void changeDate(Date *date) { //void ou date * ? como apenas dados do apontador, assumi que fosse void
-    printf("Insert new date in the following format:\n DD/MM/AAAA \n");
-    scanf("%d/%d/%d",&date->day,&date->month,&date->year);
-    getchar(); //?
-
-    //return date;
-}
 
 /**
  *
