@@ -193,6 +193,7 @@ Task *createTask(void){
     TASKS_ID = TASKS_ID +1;
     Task *new = (Task *)malloc(sizeof(Task));
     new->id=TASKS_ID;
+    char c;
     clearScreen();
     printf("Describe the task you would like to add\n\n   => ");
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
@@ -202,26 +203,23 @@ Task *createTask(void){
 
     printf("\nSet a priority(1-10)for given task\n\n   => ");
     scanf("%d",&new->priority);
+
+    while((c = getchar()) != '\n' && c != EOF);
     
     if(new->priority<1 || new->priority > 10){
         while(new->priority<1 || new->priority >10 ){
             printf("\nPlease insert a valid number between 1 and 10\n\n   => ");
             scanf("%d",&new->priority);
-            char c;
+            
             while((c = getchar()) != '\n' && c != EOF);
         }
     }
 
     printf("\nWhen will the task start?\n");
     new->creationDate=setDate();
-    while(1){
-        if(validateDate(new->creationDate)==1){
+    while(validateDate(new->creationDate)==1){
             printf("Given date was not valid\n");
             new->creationDate=setDate();
-        }
-        else{
-            break;
-        }
     }
     /*
     printf("\nWhen do you plan to finish the task?\n");
@@ -713,11 +711,11 @@ void assignDoingDone(Tasklist doingList, Tasklist doneList, int taskId){
  **/
 Date *setDate(){
     Date *new = (Date *)malloc(255*sizeof(Date));
-
+    char c;
     printf("Insert the date in the following format: DD/MM/AAAA\n\n   => ");
     scanf("%d/%d/%d",&new->day,&new->month,&new->year);
-    getchar(); //?
-
+    //getchar(); //?
+    while((c = getchar()) != '\n' && c != EOF);
     return new;
 }
 
@@ -754,29 +752,29 @@ int validateDate(Date *date){
         if(mm>=1 && mm<=12)
         {
             if((dd>=1 && dd<=31) && (mm==1 || mm==3 || mm==5 || mm==7 || mm==8 || mm==10 || mm==12)) {
-                printf("\nDate exists.\n");
+                //printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=30) && (mm==4 || mm==6 || mm==9 || mm==11)) {
-                printf("\nDate exists.\n");
+                //printf("\nDate exists.\n");
                 return 0;
             }
             else if((dd>=1 && dd<=28) && (mm==2)) {
-                printf("\nDate exists.\n");
+                //printf("\nDate exists.\n");
                 return 0;
             }
             else if(dd==29 && mm==2 && (yy%400==0 ||(yy%4==0 && yy%100!=0))) {
-                printf("\nDate exists.\n");
+                //printf("\nDate exists.\n");
                 return 0;
             }
             else {
-                printf("\nDay is not valid.\n");
+                //printf("\nDay is not valid.\n");
                 return 1;
             }
         }
         else
         {
-            printf("Month is not valid.\n");
+            //printf("Month is not valid.\n");
             return 1;
         }
     }
@@ -859,9 +857,9 @@ void tasksByPerson(Tasklist list, const char *name){
         return;
     }
 
-    while( l != NULL){
+    while(l != NULL){
 
-        if(strcmp(name,l->task->person)) {
+        if(strcmp(name,l->task->person) == 0) {
             printf("Task ID: %d {\n", l->task->id);
             printf("    Priority: %d \n", l->task->priority);
             printf("    Assigned to: %s", l->task->person);
@@ -869,13 +867,17 @@ void tasksByPerson(Tasklist list, const char *name){
             printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
             if(l->task->finalDate != NULL)
                 printf("    Final Date: %d/%d/%d \n", l->task->finalDate->day,l->task->finalDate->month, l->task->finalDate->year);
-            l=l->next;
             printf("}\n\n");
         }
         else {
-        printf("%s has no tasks in this fase\n", name);
+            if(l->next == NULL || l == NULL)
+                printf("%s has no tasks in this fase\n", name);
         }
-
+        
+        if(list->next != NULL)
+            l = l->next;
+        else
+            l = NULL;
     }
 
 }
