@@ -990,7 +990,8 @@ Tasklist fileToTasks(const char *filename){
                     //printf("Person: %s\n", tok);
                     //empty person
                     if(*tok != '\0'){
-                        new->person=tok;
+                        new->person=(char *)malloc(MAX_SIZE*sizeof(char));
+                        new->person=strdup(tok);
                     }else{
                         new->person=NULL;
                     }
