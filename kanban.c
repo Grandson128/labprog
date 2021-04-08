@@ -83,7 +83,7 @@ void printTaskList (Tasklist list){
         printf("    Description: %s\n", l->task->description);
         printf("    Priority: %d \n", l->task->priority);
         if(l->task->person != NULL){
-            printf("    Assigned to: %s", l->task->person);
+            printf("    Assigned to: %s\n", l->task->person);
         }
         printf("    Creation Date: %d/%d/%d \n", l->task->creationDate->day,l->task->creationDate->month, l->task->creationDate->year);
         printf("    Goal Date: %d/%d/%d \n", l->task->targetDate->day,l->task->targetDate->month, l->task->targetDate->year);
@@ -430,7 +430,15 @@ void insertDoingTask (Tasklist list, Task *task){
         return;
     }
 
-    while(strcmp(task->person, current->task->person) > 0 && current->next != NULL){
+    if(current==NULL){
+        return;
+    }else if(current->task == NULL){
+        return;
+    }else if(current->task->person == NULL){
+        return;
+    }
+    
+    while(strcmp(task->person, current->task->person) > 0 && current != NULL && current->next != NULL && current->next->task != NULL){
         previous = current;
         current = current->next;
     }
@@ -494,6 +502,7 @@ void insertDoneTask (Tasklist list, Task *task){
  * @targetTaskId - task identifier
  **/
 void deleteTask(Tasklist list, int targetTaskId){
+    list->info = list->info - 1;
     Tasklist current  = list->next;
     Tasklist previous = list;
 
@@ -513,7 +522,7 @@ void deleteTask(Tasklist list, int targetTaskId){
 
     previous->next = current->next;
     free(current);
-    list->info--;
+    
 }
 
 /**
@@ -582,8 +591,7 @@ void assignTodoDoing(Tasklist todoList, Tasklist doingList, int taskId){
 
         printf("Task initiated\n\n");
 
-    }
-    else {
+    }  else {
         printf("Given ID was not valid,returning to option menu\n");
         sleep(2);
     }
@@ -647,7 +655,7 @@ void assignDoneTodo(Tasklist doneList, Tasklist todoList, int taskId){
         deleteTask(doneList,taskId);
 
         //remove from file
-        if(emptyTaskList(doneList) != 1) saveInFile("doing", doneList); else clearFile("done");
+        if(emptyTaskList(doneList) != 1) saveInFile("done", doneList); else clearFile("done");
 
         printf("Task moved to To Do\n\n");
 
@@ -954,68 +962,68 @@ Tasklist fileToTasks(const char *filename){
 
         while (tok != NULL) {
             strsep(&end, ";\n");
-            printf("%d - %s\n",count, tok);
+            //printf("%d - %s\n",count, tok);
             if (headerFlag==1 && count==1){
                 if(*tok != '\0'){
                     nTasks=atoi(tok);
                 }
-                printf("Nº tasks: %d", atoi(tok));
+                //printf("Nº tasks: %d", atoi(tok));
             }else if (headerFlag==1 && count==2){
                 if(*tok != '\0'){
                     lastID=atoi(tok);
                 }
-                printf("  Last ID: %d\n", atoi(tok));
+                //printf("  Last ID: %d\n", atoi(tok));
             }
             
             if(headerFlag != 1){
                 if(count == 1){
-                    printf("ID: %d\n", atoi(tok));
+                    //printf("ID: %d\n", atoi(tok));
                     new->id=atoi(tok);
                 }else if(count == 2){
-                    printf("Desc: %s\n", tok);
+                    //printf("Desc: %s\n", tok);
                     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
                     new->description=strdup(tok);
                 }else if(count == 3){
-                    printf("Prio: %d\n", atoi(tok));
+                    //printf("Prio: %d\n", atoi(tok));
                     new->priority=atoi(tok);
                 }else if(count == 4){
-                    printf("Person: %s\n", tok);
+                    //printf("Person: %s\n", tok);
                     //empty person
-                    if(*tok == '\0'){
-                        new->person=NULL;
-                    }else{
+                    if(*tok != '\0'){
                         new->person=tok;
+                    }else{
+                        new->person=NULL;
                     }
                 }else if(count == 5){
-                    printf("Creation Date: %d/", atoi(tok));
+                    //printf("Creation Date: %d/", atoi(tok));
                     creationDay=atoi(tok);
                 }else if(count == 6){
-                    printf("%d/", atoi(tok));
+                    //printf("%d/", atoi(tok));
                     creationMonth=atoi(tok);
                 }else if(count == 7){
-                    printf("%d\n", atoi(tok));
+                    //printf("%d\n", atoi(tok));
                     creationYear=atoi(tok);
                 }else if(count == 8){
-                    printf("Goal Date: %d/", atoi(tok));
+                    //printf("Goal Date: %d/", atoi(tok));
                     goalDay=atoi(tok);
                 }else if(count == 9){
-                    printf("%d/", atoi(tok));
+                    //printf("%d/", atoi(tok));
                     goalMonth=atoi(tok);
                 }else if(count == 10){
-                    printf("%d\n", atoi(tok));
+                    //printf("%d\n", atoi(tok));
                     goalYear=atoi(tok);
                 }else if(count == 11){
-                    printf("Final Date: %d/", atoi(tok));
+                    //printf("Final Date: %d/", atoi(tok));
                     if(*tok != '\0'){
                         finalDay=atoi(tok);
                     }else finalDay=0;
                 }else if(count == 12){
-                    printf("%d/", atoi(tok));
+                    //printf("%d/", atoi(tok));
                     if(*tok != '\0'){
                         finalMonth=atoi(tok);
                     }else finalMonth=0;
                 }else if(count == 13){
-                    printf("%d\n", atoi(tok));
+                    //printf("%d\n", atoi(tok));
                     if(*tok != '\0'){
                         finalYear=atoi(tok);
                     }else finalYear=0;

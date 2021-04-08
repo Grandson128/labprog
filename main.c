@@ -20,6 +20,7 @@ void banner(){
 }
 
 void menu(int option){
+    char c;
     switch (option){
         case 1: //CRIAR TAREFA
             newTask = createTask();
@@ -40,17 +41,31 @@ void menu(int option){
             if(creationDateList->next != NULL){
                 printf("Insert the Task ID you wish to delete\n\n   => ");
                 scanf("%d", &taskId);
-                deleteTask(creationDateList, taskId);
-                if(emptyTaskList(creationDateList) != 1) saveInFile("creation", creationDateList);  else clearFile("creation");
-                if (taskIn(todoList, taskId) == 1 ) {deleteTask(todoList, taskId);  if(emptyTaskList(todoList) != 1) saveInFile("todo", todoList); else clearFile("todo");}
-                if (taskIn(doingList, taskId) == 1 ) {deleteTask(doingList, taskId); if(emptyTaskList(doingList) != 1) saveInFile("doing", doingList); else clearFile("doing");}
-                if (taskIn(doneList, taskId) == 1 ) {deleteTask(doneList, taskId); if(emptyTaskList(doneList) != 1) saveInFile("done", doneList); else clearFile("done");}
-                printf("\nTask Eliminated\nReturning to main menu...\n");
-                sleep(3);
-            }
-            else{
+
+                 while((c = getchar()) != '\n' && c != EOF);
+
+                if (taskIn(creationDateList, taskId) == 1) {
+                    deleteTask(creationDateList, taskId);
+                    if(emptyTaskList(creationDateList) != 1) 
+                        saveInFile("creation", creationDateList);  
+                    else 
+                        clearFile("creation");
+
+                    if (taskIn(todoList, taskId) == 1 ) {deleteTask(todoList, taskId);  if(emptyTaskList(todoList) != 1) saveInFile("todo", todoList); else clearFile("todo");}
+                    if (taskIn(doingList, taskId) == 1 ) {deleteTask(doingList, taskId); if(emptyTaskList(doingList) != 1) saveInFile("doing", doingList); else clearFile("doing");}
+                    if (taskIn(doneList, taskId) == 1 ) {deleteTask(doneList, taskId); if(emptyTaskList(doneList) != 1) saveInFile("done", doneList); else clearFile("done");}
+                    
+                    printf("\nTask Eliminated\nReturning to main menu...\n");
+                    sleep(2);
+
+                } else {
+                    printf("Invalid task\nReturning to main menu...\n");
+                    sleep(1);
+                }
+                
+            } else{
                 printf("No tasks to eliminate\nReturning to main menu...\n");
-                sleep(3);
+                sleep(1);
             }
             break;
 
@@ -68,7 +83,7 @@ void menu(int option){
                 scanf("%d", &taskId);
                 assignTodoDoing(todoList, doingList, taskId);
 
-                saveInFile("todo", todoList);
+                //saveInFile("todo", todoList);
                 saveInFile("doing", doingList);
 
             }
@@ -85,7 +100,7 @@ void menu(int option){
                 scanf("%d", &taskId);
                 assignDoingTodo(todoList, doingList, taskId);
 
-                saveInFile("doing", doingList);
+                //saveInFile("doing", doingList);
                 saveInFile("todo", todoList);
 
             }
@@ -102,7 +117,7 @@ void menu(int option){
                 scanf("%d", &taskId);
                 assignDoingDone(doingList, doneList, taskId);
 
-                saveInFile("doing", doingList);
+                //saveInFile("doing", doingList);
                 saveInFile("done", doneList);
 
             }
@@ -144,7 +159,7 @@ void menu(int option){
                 assignDoneTodo(doneList, todoList, taskId);
 
                 saveInFile("todo", todoList);
-                saveInFile("done", doneList);
+                //saveInFile("done", doneList);
 
             }
             else {
@@ -200,7 +215,7 @@ void menu(int option){
         case 20: //testing
             // creationDateList=fileToTasks("creation");
             // todoList=fileToTasks("todo");
-            // doingList=fileToTasks("doing");
+            //fileToTasks("doing");
             // doneList=fileToTasks("done");
             //printf("\n\nLasIDList:%d   TASKS_ID:%d\n\n", creationDateList->lastID, TASKS_ID);
             getchar();
@@ -253,10 +268,13 @@ int main(){
 
     generateEmptyFiles();
 
-    creationDateList=fileToTasks("creation");
-    todoList=fileToTasks("todo");
     doingList=fileToTasks("doing");
+
+    todoList=fileToTasks("todo");
+    
     doneList=fileToTasks("done");
+
+    creationDateList=fileToTasks("creation");
 
     while (option != 0){
         clearScreen();
