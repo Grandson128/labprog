@@ -30,6 +30,7 @@ Tasklist createTaskList(){
 
     if (aux != NULL) {
         aux->info = 0;
+        aux->lastID = 0;
         aux->task = NULL;
         aux->next = NULL;
     }
