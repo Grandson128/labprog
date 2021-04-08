@@ -193,7 +193,7 @@ Task *createTask(void){
     TASKS_ID = TASKS_ID +1;
     Task *new = (Task *)malloc(sizeof(Task));
     new->id=TASKS_ID;
-    //clearScreen();
+    clearScreen();
     printf("Describe the task you would like to add\n\n   => ");
     new->description=(char *)malloc(MAX_SIZE*sizeof(char));
     fgets(new->description,MAX_SIZE,stdin);
